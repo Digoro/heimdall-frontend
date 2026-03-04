@@ -1,0 +1,62 @@
+<div class="flex min-h-screen flex-col lg:flex-row">
+  <div style="position: absolute" class="p-12">
+    <p>Order Management System</p>
+  </div>
+  <div class="flex flex-1 items-center justify-center bg-background p-4 sm:p-8">
+    <div class="w-full max-w-md space-y-6 sm:space-y-8">
+      <div class="text-center">
+        <h1 class="text-2xl font-bold sm:text-3xl">Login to your account</h1>
+        <p class="mt-2 text-sm text-muted-foreground sm:text-base">
+          Enter your email below to login to your account
+        </p>
+      </div>
+
+      <z-card class="p-4 sm:p-6 lg:p-8">
+        <form [formGroup]="loginForm" class="space-y-4 sm:space-y-6" (ngSubmit)="login($event)">
+          <z-form-field>
+            <z-form-label [zRequired]="true">Email</z-form-label>
+            <z-form-control>
+              <input
+                z-input
+                type="email"
+                formControlName="email"
+                placeholder="gildong_hong@example.com"
+                class="w-full"
+              />
+            </z-form-control>
+          </z-form-field>
+
+          <z-form-field>
+            <div class="flex items-center justify-between">
+              <z-form-label [zRequired]="true">Password</z-form-label>
+              <!-- <a z-button zType="link" class="p-0">Forgot password?</a> -->
+            </div>
+            <z-form-control>
+              <input
+                z-input
+                type="password"
+                formControlName="password"
+                placeholder=""
+                class="w-full"
+              />
+            </z-form-control>
+          </z-form-field>
+
+          <button type="submit" z-button zFull [zLoading]="isLoading()" [disabled]="isLoading()">
+            Sign in
+          </button>
+        </form>
+      </z-card>
+
+      <div class="text-center text-sm text-muted-foreground" (click)="goToSignUp($event)">
+        Don't have an account?
+        <a z-button zType="link" href="#" class="px-0">Sign up</a>
+      </div>
+    </div>
+  </div>
+  <div class="hidden flex-1 items-center justify-center bg-black p-8 lg:flex">
+    <div class="text-center">
+      <img src="Hanwha Systems_CMYK_43_EH_w.png" width="376" />
+    </div>
+  </div>
+</div>
