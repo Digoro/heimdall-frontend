@@ -134,7 +134,7 @@ export class APIKeyPage implements OnInit {
   }
 
   getAPIKeyUsage() {
-    this.authService.get().subscribe(resp => {
+    this.authService.getCuurentUserFromServer().subscribe(resp => {
       this.dailyUsage.set(resp.dailyUsage);
       this.dailyLimit.set(resp.dailyLimit);
       if (resp.dailyLimit <= 0) {

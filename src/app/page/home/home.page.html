@@ -9,7 +9,7 @@
         <div>
           <z-breadcrumb zWrap="wrap" zAlign="start">
             <z-breadcrumb-item>
-              <span aria-current="page">API Keys</span>
+              <span aria-current="page">{{ pageTitle() }}</span>
             </z-breadcrumb-item>
           </z-breadcrumb>
         </div>
@@ -42,19 +42,16 @@
             <z-sidebar-group-label>API</z-sidebar-group-label>
           }
           @for (item of mainMenuItems; track item.label) {
-            <button
-              type="button"
-              z-button
-              zType="ghost"
-              [class]="sidebarCollapsed() ? 'justify-center' : 'justify-start'"
-              zPosition="right"
-              (click)="goTo()"
+            <a
+              [routerLink]="item.page"
+              routerLinkActive="active-menu"
+              class="flex gap-1 items-center p-2.5 rounded-[10px]"
             >
               <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
               @if (!sidebarCollapsed()) {
-                <span>{{ item.label }}</span>
+                <span class="text-sm font-medium">{{ item.label }}</span>
               }
-            </button>
+            </a>
           }
         </z-sidebar-group>
 
@@ -68,15 +65,12 @@
               (sidebarCollapsed() ? 'm-2 p-0' : 'p-2')
             "
           >
-            <z-avatar
-              zSrc="https://zardui.com/images/avatar/imgs/avatar_image.jpg"
-              zAlt="Zard UI"
-            />
+            <z-icon zType="user" class="w-6 h-6" />
 
             @if (!sidebarCollapsed()) {
               <div>
-                <span class="font-medium">zardui</span>
-                <div class="text-xs">test&#64;zardui.com</div>
+                <span class="font-medium">{{ name() }}</span>
+                <div class="text-xs">{{ email() }}</div>
               </div>
 
               <z-icon zType="chevrons-up-down" class="ml-auto" />
@@ -85,16 +79,7 @@
 
           <ng-template #userMenu>
             <div z-menu-content class="w-48">
-              <button type="button" z-menu-item>
-                <z-icon zType="user" class="mr-2" />
-                Profile
-              </button>
-              <button type="button" z-menu-item>
-                <z-icon zType="settings" class="mr-2" />
-                Settings
-              </button>
-              <z-divider zSpacing="sm" />
-              <button type="button" z-menu-item>
+              <button type="button" z-menu-item (click)="logout()">
                 <z-icon zType="log-out" class="mr-2" />
                 Logout
               </button>
@@ -104,7 +89,7 @@
       </nav>
     </z-sidebar>
 
-    <z-content class="min-h-50">
+    <z-content class="min-h-50 p-0">
       <router-outlet />
       <z-toaster />
     </z-content>

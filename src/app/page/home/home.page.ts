@@ -1,32 +1,32 @@
-import { ZardAvatarComponent } from '@/shared/components/avatar';
+import { AuthService } from '@/service/auth.service';
 import { ZardBreadcrumbImports } from '@/shared/components/breadcrumb/breadcrumb.imports';
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardDividerComponent } from '@/shared/components/divider';
 import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { ZardMenuImports } from '@/shared/components/menu';
 import { ZardToastComponent } from '@/shared/components/toast';
-import { Component, signal } from "@angular/core";
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit, signal } from "@angular/core";
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 
 interface MenuItem {
   icon: ZardIcon;
   label: string;
-  submenu?: { label: string }[];
+  page: string;
 }
 
 @Component({
   standalone: true,
   imports: [
     LayoutImports,
-    ZardButtonComponent,
     ZardMenuImports,
-    ZardDividerComponent,
-    ZardAvatarComponent,
     ZardIconComponent,
     ZardBreadcrumbImports,
     RouterOutlet,
     ZardToastComponent,
+    RouterLinkWithHref,
+    RouterLinkActive,
+    RouterModule,
   ],
   providers: [
 
@@ -34,21 +34,52 @@ interface MenuItem {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   readonly sidebarCollapsed = signal(false);
-
+  pageTitle = signal('');
   mainMenuItems: MenuItem[] = [
-    { icon: 'file-text', label: 'API Keys' },
-    { icon: 'book-open', label: 'API Documents' },
+    { icon: 'file-text', label: 'API Keys', page: 'apiKeys' },
+    { icon: 'book-open', label: 'API Documents', page: 'api-docs' },
   ];
+  name = signal('');
+  email = signal('');
 
   constructor(
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private titleService: Title
   ) { }
 
-  goTo() {
-    this.router.navigate(['/api/docs'])
+  ngOnInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        let currentRoute = this.route;
+        while (currentRoute.firstChild) {
+          currentRoute = currentRoute.firstChild;
+        }
+        const title = currentRoute.snapshot.data['pageTitle'];
+        this.pageTitle.set(title);
+        this.titleService.setTitle(`OMS - ${title}`);
+      });
+    this.authService.getCurrentUser().subscribe(resp => {
+      if (resp) {
+        this.name.set(resp.name);
+        this.email.set(resp.email);
+      }
+    })
   }
+
+  logout() {
+    this.authService.logout();
+    location.reload();
+  }
+
+  goTo(page: string) {
+    this.router.navigate([page]);
+  }
+
   toggleSidebar() {
     this.sidebarCollapsed.update(collapsed => !collapsed);
   }

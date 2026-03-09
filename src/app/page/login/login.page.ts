@@ -46,7 +46,7 @@ export class LoginPage {
     this.isLoading.set(true);
     const { email, password } = this.loginForm.value;
     this.authService.login(email!, password!).subscribe(resp => {
-      this.router.navigate(['/users']);
+      this.router.navigate(['/']);
       this.isLoading.set(false);
       this.errorMsg.set('');
     }, err => {

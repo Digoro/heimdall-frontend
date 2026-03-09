@@ -5,8 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [
-  ],
+  imports: [],
   providers: [
     AuthService
   ],
@@ -18,6 +17,6 @@ export class APIDocsPage {
 
   constructor(
     private santizer: DomSanitizer) {
-    this.swaggerUrl = this.santizer.bypassSecurityTrustResourceUrl('http://localhost:3000/api/docs');
+    this.swaggerUrl = this.santizer.bypassSecurityTrustResourceUrl('http://localhost:3000/api-docs');
   }
 }

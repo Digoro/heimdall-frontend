@@ -49,8 +49,6 @@ export class SignupPage {
     private userService: UserService,
     private router: Router
   ) {
-
-    this.newMethod();
   }
 
   signup(event: Event) {
@@ -60,22 +58,17 @@ export class SignupPage {
     const dto = new UserCreateDto(name!, email!, department!, password!);
     this.userService.create(dto).subscribe(resp => {
       this.isLoading.set(false);
-      this.newMethod();
-
+      this.alertDialogService.info({
+        zTitle: 'Registration Successful!',
+        zDescription: 'Your account has been created successfully. Please log in to continue.',
+        zOkText: 'Ok',
+        zOnOk: () => {
+          this.router.navigate(['/home']);
+        }
+      });
     }, err => {
       this.isLoading.set(false);
     })
-  }
-
-  private newMethod() {
-    this.alertDialogService.info({
-      zTitle: 'Registration Successful!',
-      zDescription: 'Your account has been created successfully. Please log in to continue.',
-      zOkText: 'Ok',
-      zOnOk: () => {
-        this.router.navigate(['/home']);
-      }
-    });
   }
 
   goToSignIn(event: Event) {

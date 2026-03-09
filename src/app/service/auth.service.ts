@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -23,6 +23,13 @@ export class AuthService {
         })
       )
   }
+
+  getCurrentUser(): Observable<User | null> {
+    const user = this.jwtHelper.decodeToken(this.token) as User;
+    if (!user) return of(null);
+    return of(user);
+  }
+
 
   setToken(token: string) {
     this.removeToken();
@@ -48,7 +55,7 @@ export class AuthService {
     return token ? !this.jwtHelper.isTokenExpired(token) : false;
   }
 
-  get(): Observable<User> {
+  getCuurentUserFromServer(): Observable<User> {
     return this.http.get<User>('/auth/user');
   }
 }
