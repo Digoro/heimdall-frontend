@@ -1,8 +1,9 @@
+import { User } from '@/model/user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from 'ngx-cookie-service';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -45,5 +46,9 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.token;
     return token ? !this.jwtHelper.isTokenExpired(token) : false;
+  }
+
+  get(): Observable<User> {
+    return this.http.get<User>('/auth/user');
   }
 }

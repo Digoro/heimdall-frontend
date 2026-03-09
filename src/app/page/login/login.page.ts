@@ -3,6 +3,7 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardFormControlComponent, ZardFormFieldComponent, ZardFormLabelComponent } from '@/shared/components/form';
 import { ZardInputDirective } from '@/shared/components/input';
+import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    CommonModule,
     ZardButtonComponent,
     ZardCardComponent,
     ZardInputDirective,
@@ -27,6 +29,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
   isLoading = signal(false);
+  errorMsg = signal('');
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -45,8 +48,10 @@ export class LoginPage {
     this.authService.login(email!, password!).subscribe(resp => {
       this.router.navigate(['/users']);
       this.isLoading.set(false);
+      this.errorMsg.set('');
     }, err => {
       this.isLoading.set(false);
+      this.errorMsg.set(err.error.message);
     })
   }
 

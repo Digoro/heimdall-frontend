@@ -40,6 +40,9 @@
                 class="w-full"
               />
             </z-form-control>
+            @if (errorMsg()) {
+              <p class="text-sm text-red-600">{{ errorMsg() }}</p>
+            }
           </z-form-field>
 
           <button type="submit" z-button zFull [zLoading]="isLoading()" [disabled]="isLoading()">

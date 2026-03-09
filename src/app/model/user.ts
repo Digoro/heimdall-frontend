@@ -1,3 +1,4 @@
+
 export class User {
   constructor(
     public id: number,
@@ -6,8 +7,12 @@ export class User {
     public name: string,
     public department: string,
     public role: Role,
-    public createdAt: string,
-    public updatedAt: string
+    public dailyUsage: number,
+    public dailyLimit: number,
+    public monthlyUsage: number,
+    public monthlyLimit: number,
+    public createdAt: Date,
+    public updatedAt: Date
   ) { }
 }
 

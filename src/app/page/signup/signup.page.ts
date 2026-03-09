@@ -1,11 +1,13 @@
 import { UserCreateDto } from '@/model/user';
-import { AuthService } from '@/service/auth.service';
 import { UserService } from '@/service/user.service';
+import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardFormControlComponent, ZardFormFieldComponent, ZardFormLabelComponent } from '@/shared/components/form';
 import { ZardInputDirective } from '@/shared/components/input';
-import { Component, signal } from '@angular/core';
+import { matchValidator } from '@/shared/utils/match-validator';
+import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
   selector: 'signup',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     ZardButtonComponent,
     ZardCardComponent,
@@ -22,7 +25,6 @@ import { Router } from '@angular/router';
     ZardFormControlComponent,
   ],
   providers: [
-    AuthService,
     UserService
   ],
   templateUrl: './signup.page.html',
@@ -32,18 +34,24 @@ export class SignupPage {
   isLoading = signal(false);
 
   loginForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    department: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(1), Validators.maxLength(255)]),
+    department: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(100), Validators.pattern(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,100}$/)]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(100), Validators.pattern(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,100}$/)]),
+  }, {
+    validators: matchValidator('password', 'confirmPassword')
   });
 
+  alertDialogService = inject(ZardAlertDialogService);
+
   constructor(
-    private authService: AuthService,
     private userService: UserService,
     private router: Router
-  ) { }
+  ) {
+
+    this.newMethod();
+  }
 
   signup(event: Event) {
     event.preventDefault();
@@ -51,11 +59,23 @@ export class SignupPage {
     const { name, email, department, password, confirmPassword } = this.loginForm.value;
     const dto = new UserCreateDto(name!, email!, department!, password!);
     this.userService.create(dto).subscribe(resp => {
-      this.router.navigate(['/users']);
       this.isLoading.set(false);
+      this.newMethod();
+
     }, err => {
       this.isLoading.set(false);
     })
+  }
+
+  private newMethod() {
+    this.alertDialogService.info({
+      zTitle: 'Registration Successful!',
+      zDescription: 'Your account has been created successfully. Please log in to continue.',
+      zOkText: 'Ok',
+      zOnOk: () => {
+        this.router.navigate(['/home']);
+      }
+    });
   }
 
   goToSignIn(event: Event) {

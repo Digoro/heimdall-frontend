@@ -1,0 +1,117 @@
+<div class="flex flex-col gap-4">
+  <div class="flex gap-4">
+    <z-card class="w-full md:w-56">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-sm text-gray-400">Daily Usage</p>
+        <z-badge zType="outline">{{ dailyStat() }}%</z-badge>
+      </div>
+      <div class="mb-3 text-2xl font-semibold">{{ dailyUsage() }} / {{ dailyLimit() }}</div>
+      <z-progress-bar [progress]="dailyStat()" class="mb-3" />
+      <p class="text-sm text-gray-400">Daily quota resets at midnight.</p>
+    </z-card>
+
+    <z-card class="w-full md:w-56">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-sm text-gray-400">Monthly Usage</p>
+        <z-badge zType="outline">{{ monthlyStat() }}%</z-badge>
+      </div>
+      <div class="mb-3 text-2xl font-semibold">{{ monthlyUsage() }} / {{ monthlyLimit() }}</div>
+      <z-progress-bar [progress]="monthlyStat()" class="mb-3" />
+      <p class="text-sm text-gray-400">Monthly quota resets on the 1st of each month.</p>
+    </z-card>
+  </div>
+
+  <div class="flex justify-end">
+    <button z-button (click)="openDialog()"><i z-icon zType="plus"></i>Create New Key</button>
+  </div>
+
+  <div class="rounded-md border mb-3 h-fit">
+    <table z-table>
+      <thead z-table-header>
+        <tr z-table-row>
+          <th z-table-head>Index</th>
+          <th z-table-head>Label</th>
+          <th z-table-head>Key</th>
+          <th z-table-head>Status</th>
+          <th z-table-head>Created At</th>
+          <th z-table-head>Last Used At</th>
+          <th z-table-head></th>
+        </tr>
+      </thead>
+      <tbody z-table-body>
+        @for (apiKey of apiKeys(); track apiKey.id; let idx = $index) {
+          <tr z-table-row>
+            <td z-table-cell>{{ (meta().currentPage - 1) * meta().itemsPerPage + (idx + 1) }}</td>
+            @if (apiKey.label) {
+              <td z-table-cell>{{ apiKey.label }}</td>
+            } @else {
+              <td z-table-cell>-</td>
+            }
+            <td z-table-cell>{{ apiKey.maskKey }}</td>
+            <td z-table-cell>
+              @if (apiKey.status == 'Active') {
+                <z-badge zType="outline" class="text-gray-500">
+                  <z-icon zType="circle-check" class="text-green-500" />
+                  {{ apiKey.status }}</z-badge
+                >
+              } @else if (apiKey.status == 'Inactive') {
+                <z-badge zType="outline" class="text-gray-500">
+                  <z-icon zType="ban" class="text-gray-500" />
+                  {{ apiKey.status }}</z-badge
+                >
+              } @else if (apiKey.status == 'Expired') {
+                <z-badge zType="outline" class="text-gray-500">
+                  <z-icon zType="x" class="text-red-500" />
+                  {{ apiKey.status }}</z-badge
+                >
+              }
+            </td>
+            <td z-table-cell>{{ apiKey.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            @if (apiKey.lastUsedAt) {
+              <td z-table-cell>{{ apiKey.lastUsedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            } @else {
+              <td z-table-cell>-</td>
+            }
+            <td z-table-cell>
+              <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
+                <i z-icon zType="ellipsis"></i>
+
+                <ng-template #menu>
+                  <div z-menu-content class="w-48">
+                    @if (apiKey.status == 'Inactive') {
+                      <button type="button" z-menu-item (click)="active(apiKey)">
+                        <i z-icon zType="circle-check"></i>
+                        Active
+                      </button>
+                      <z-divider zSpacing="sm" />
+                    }
+                    @if (apiKey.status == 'Active') {
+                      <button type="button" z-menu-item (click)="inActive(apiKey)">
+                        <i z-icon zType="ban"></i>
+                        Inactive
+                      </button>
+                      <z-divider zSpacing="sm" />
+                    }
+                    <button type="button" z-menu-item class="text-red-500" (click)="delete(apiKey)">
+                      <i z-icon zType="trash"></i>
+                      Delete
+                    </button>
+                  </div>
+                </ng-template>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr z-table-row>
+            <td z-table-cell [attr.colspan]="8" class="h-60 text-center">No results.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <z-pagination
+    [zTotal]="meta().totalPages"
+    [(zPageIndex)]="meta().currentPage"
+    (zPageIndexChange)="pageChange($event)"
+  />
+</div>
