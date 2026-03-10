@@ -49,6 +49,7 @@ export class UserListPage implements OnInit {
   fb = inject(FormBuilder);
   roles = Object.values(Role);
   selectedValues = signal<Role[]>([]);
+  rows = '10';
 
   searchForm = this.fb.group({
     term: [''],
@@ -84,13 +85,18 @@ export class UserListPage implements OnInit {
     this.searchUsers(1);
   }
 
-  private searchUsers(page: number, limit: number = 10) {
+  private searchUsers(page: number) {
+    const limit = +this.rows;
     const term = this.searchForm.controls.term.value!;
     const roles = this.selectedValues();
     this.userService.search({ page, limit, term, roles }).subscribe(resp => {
       this.users.set(resp.items);
       this.meta.set(resp.meta);
     });
+  }
+
+  rowsChange() {
+    this.searchUsers(1);
   }
 
   pageChange(event: number) {

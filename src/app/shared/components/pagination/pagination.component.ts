@@ -59,7 +59,7 @@ export class ZardPaginationContentComponent {
   },
   exportAs: 'zPaginationItem',
 })
-export class ZardPaginationItemComponent {}
+export class ZardPaginationItemComponent { }
 // Structural wrapper component for pagination items (<li>). No inputs required.
 
 @Component({

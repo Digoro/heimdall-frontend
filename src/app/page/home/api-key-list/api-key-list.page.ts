@@ -12,6 +12,7 @@ import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
+import { ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
 import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
@@ -33,6 +34,7 @@ import { NewAPIKeyComponent } from "./new-api-key.component";
     ZardIconComponent,
     ZardMenuImports,
     ZardDividerComponent,
+    ZardSelectImports
   ],
   providers: [
     APIService,
@@ -52,6 +54,8 @@ export class APIKeyPage implements OnInit {
     totalPages: 0,
     currentPage: 0
   });
+  rows = '10';
+
   private dialogService = inject(ZardDialogService);
   dailyUsage = signal(0);
   dailyLimit = signal(0);
@@ -70,11 +74,16 @@ export class APIKeyPage implements OnInit {
     this.getAPIKeyUsage();
   }
 
-  private searchAPIKeys(page: number, limit: number = 10) {
+  private searchAPIKeys(page: number) {
+    const limit = +this.rows;
     this.apiService.search({ page, limit }).subscribe(resp => {
       this.apiKeys.set(resp.items);
       this.meta.set(resp.meta);
     });
+  }
+
+  rowsChange() {
+    this.searchAPIKeys(1);
   }
 
   pageChange(event: number) {

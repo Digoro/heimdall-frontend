@@ -25,7 +25,7 @@
     <button z-button (click)="openDialog()"><i z-icon zType="plus"></i>Create New Key</button>
   </div>
 
-  <div class="rounded-md border mb-3 h-fit">
+  <div class="rounded-md border h-fit">
     <table z-table>
       <thead z-table-header>
         <tr z-table-row>
@@ -109,9 +109,24 @@
       </tbody>
     </table>
   </div>
-  <z-pagination
-    [zTotal]="meta().totalPages"
-    [(zPageIndex)]="meta().currentPage"
-    (zPageIndexChange)="pageChange($event)"
-  />
+  <div class="flex justify-between">
+    <div class="w-30">
+      <p class="text-sm text-gray-500">Total: {{ meta().totalItems }}</p>
+    </div>
+    <div class="flex">
+      <z-select [(zValue)]="rows" class="w-25" (zValueChange)="rowsChange()">
+        <z-select-item zValue="10">10</z-select-item>
+        <z-select-item zValue="20">20</z-select-item>
+        <z-select-item zValue="30">30</z-select-item>
+        <z-select-item zValue="50">50</z-select-item>
+        <z-select-item zValue="100">100</z-select-item>
+      </z-select>
+      <z-pagination
+        class="flex"
+        [zTotal]="meta().totalPages"
+        [(zPageIndex)]="meta().currentPage"
+        (zPageIndexChange)="pageChange($event)"
+      />
+    </div>
+  </div>
 </div>

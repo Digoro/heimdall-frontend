@@ -1,0 +1,126 @@
+<div class="flex flex-col gap-4 p-4">
+  <div class="flex justify-between gap-3">
+    <div>
+      <form [formGroup]="searchForm" class="flex w-200 gap-3">
+        <z-input-group [zAddonBefore]="search">
+          <input z-input placeholder="User email" formControlName="email" />
+        </z-input-group>
+        <ng-template #search><z-icon zType="search" /></ng-template>
+        <div class="flex w-200 gap-4">
+          <z-select
+            zPlaceholder="Select Type"
+            [zMultiple]="true"
+            [zMaxLabelCount]="3"
+            [(zValue)]="selectedTypeList"
+            (zSelectionChange)="statusSelectChange()"
+          >
+            @for (orderStatus of orderTypeList; track $index) {
+              <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
+            }
+          </z-select>
+        </div>
+        <div class="flex w-200 gap-4">
+          <z-select
+            zPlaceholder="Select Status"
+            [zMultiple]="true"
+            [zMaxLabelCount]="3"
+            [(zValue)]="selectedStatusList"
+            (zSelectionChange)="statusSelectChange()"
+          >
+            @for (orderStatus of orderStatusList; track $index) {
+              <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
+            }
+          </z-select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="rounded-md border h-fit">
+    <table z-table>
+      <thead z-table-header>
+        <tr z-table-row>
+          <th z-table-head>Index</th>
+          <th z-table-head>Order ID</th>
+          <th z-table-head>User</th>
+          <th z-table-head>Type</th>
+          <th z-table-head>Status</th>
+          <th z-table-head>Created</th>
+          <th z-table-head>Updated</th>
+          <th z-table-head></th>
+        </tr>
+      </thead>
+      <tbody z-table-body>
+        @for (order of orders(); track order.id; let idx = $index) {
+          <tr z-table-row>
+            <td z-table-cell>{{ (meta().currentPage - 1) * meta().itemsPerPage + (idx + 1) }}</td>
+            <td z-table-cell>{{ order.id }}</td>
+            <td z-table-cell>
+              {{ order.user.name }} / {{ order.user.email }} / {{ order.user.department }}
+            </td>
+
+            <td z-table-cell>
+              <z-badge zType="outline" class="text-gray-500"> {{ order.type }}</z-badge>
+            </td>
+            <td z-table-cell>
+              <z-badge zType="outline" class="text-gray-500"> {{ order.status }}</z-badge>
+            </td>
+            <td z-table-cell>{{ order.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td z-table-cell>{{ order.updatedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td z-table-cell>
+              <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
+                <i z-icon zType="ellipsis"></i>
+
+                <ng-template #menu>
+                  <div z-menu-content class="w-48">
+                    <button type="button" z-menu-item>
+                      <i z-icon zType="info"></i>
+                      View Detail
+                    </button>
+                    <button type="button" z-menu-item>
+                      <i z-icon zType="zap"></i>
+                      Update Status
+                    </button>
+                    <button type="button" z-menu-item>
+                      <i z-icon zType="chevron-up"></i>
+                      Upload Product
+                    </button>
+                    <button type="button" z-menu-item>
+                      <i z-icon zType="chevron-down"></i>
+                      Export Order
+                    </button>
+                  </div>
+                </ng-template>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr z-table-row>
+            <td z-table-cell [attr.colspan]="8" class="h-60 text-center">No results.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-between">
+    <div class="w-30">
+      <p class="text-sm text-gray-500">Total: {{ meta().totalItems }}</p>
+    </div>
+    <div class="flex">
+      <z-select [(zValue)]="rows" class="w-25" (zValueChange)="rowsChange()">
+        <z-select-item zValue="10">10</z-select-item>
+        <z-select-item zValue="20">20</z-select-item>
+        <z-select-item zValue="30">30</z-select-item>
+        <z-select-item zValue="50">50</z-select-item>
+        <z-select-item zValue="100">100</z-select-item>
+      </z-select>
+      <z-pagination
+        class="flex"
+        [zTotal]="meta().totalPages"
+        [(zPageIndex)]="meta().currentPage"
+        (zPageIndexChange)="pageChange($event)"
+      />
+    </div>
+  </div>
+</div>
