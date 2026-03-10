@@ -20,7 +20,8 @@ export class UserSearchDto {
   constructor(
     public page: number,
     public limit: number,
-    public roleList?: Role[],
+    public term?: string,
+    public roles?: Role[],
   ) { }
 }
 
@@ -30,10 +31,22 @@ export class UserCreateDto {
     public email: string,
     public department: string,
     public password: string,
+    public role?: Role
+  ) { }
+}
+
+export class UserUpdateDto {
+  constructor(
+    public name: string,
+    public email: string,
+    public department: string,
+    public role: Role,
+    public dailyLimit: number,
+    public monthlyLimit: number
   ) { }
 }
 
 export enum Role {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = 'Admin',
+  USER = 'User',
 }

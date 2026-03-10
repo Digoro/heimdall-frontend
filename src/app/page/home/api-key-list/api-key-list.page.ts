@@ -6,7 +6,7 @@ import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
 import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
-import { ZardDialogModule, ZardDialogService } from "@/shared/components/dialog";
+import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardDividerComponent } from "@/shared/components/divider";
 import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardMenuImports } from "@/shared/components/menu";
@@ -33,7 +33,6 @@ import { NewAPIKeyComponent } from "./new-api-key.component";
     ZardIconComponent,
     ZardMenuImports,
     ZardDividerComponent,
-    ZardDialogModule,
   ],
   providers: [
     APIService,
@@ -134,7 +133,7 @@ export class APIKeyPage implements OnInit {
   }
 
   getAPIKeyUsage() {
-    this.authService.getCuurentUserFromServer().subscribe(resp => {
+    this.authService.getCurrentUserFromServer().subscribe(resp => {
       this.dailyUsage.set(resp.dailyUsage);
       this.dailyLimit.set(resp.dailyLimit);
       if (resp.dailyLimit <= 0) {

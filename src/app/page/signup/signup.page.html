@@ -15,7 +15,7 @@
       </div>
 
       <z-card class="p-4 sm:p-6 lg:p-8">
-        <form [formGroup]="loginForm" class="space-y-4 sm:space-y-6" (ngSubmit)="signup($event)">
+        <form [formGroup]="userForm" class="space-y-4 sm:space-y-6" (ngSubmit)="signup($event)">
           <z-form-field>
             <z-form-label [zRequired]="true">Full Name </z-form-label>
             <z-form-control>
@@ -27,7 +27,7 @@
                 class="w-full"
               />
             </z-form-control>
-            @if (loginForm.controls.name.dirty && loginForm.controls.name.hasError('maxlength')) {
+            @if (userForm.controls.name.dirty && userForm.controls.name.hasError('maxlength')) {
               <span class="text-sm text-red-600">Up to 50 characters.</span>
             }
           </z-form-field>
@@ -43,10 +43,10 @@
                 class="w-full"
               />
             </z-form-control>
-            @if (loginForm.controls.email.dirty && loginForm.controls.email.hasError('email')) {
+            @if (userForm.controls.email.dirty && userForm.controls.email.hasError('email')) {
               <span class="text-sm text-red-600">Must be in email format.</span>
             }
-            @if (loginForm.controls.email.dirty && loginForm.controls.email.hasError('maxlength')) {
+            @if (userForm.controls.email.dirty && userForm.controls.email.hasError('maxlength')) {
               <span class="text-sm text-red-600">Up to 255 characters.</span>
             }
           </z-form-field>
@@ -63,8 +63,8 @@
               />
             </z-form-control>
             @if (
-              loginForm.controls.department.dirty &&
-              loginForm.controls.department.hasError('maxlength')
+              userForm.controls.department.dirty &&
+              userForm.controls.department.hasError('maxlength')
             ) {
               <span class="text-sm text-red-600">Up to 100 characters.</span>
             }
@@ -81,7 +81,7 @@
                 class="w-full"
               />
             </z-form-control>
-            @if (loginForm.controls.password.hasError('pattern')) {
+            @if (userForm.controls.password.hasError('pattern')) {
               <p class="text-sm text-red-600">
                 Password must be at least 8 characters long, including English letters, numbers, and
                 special characters.
@@ -100,7 +100,7 @@
                 class="w-full"
               />
             </z-form-control>
-            @if (loginForm.controls.confirmPassword.hasError('mustMatch')) {
+            @if (userForm.controls.confirmPassword.hasError('mustMatch')) {
               <p class="text-sm text-red-600">Password and Confirm Password must match.</p>
             }
           </z-form-field>
@@ -109,7 +109,7 @@
             z-button
             zFull
             [zLoading]="isLoading()"
-            [zDisabled]="isLoading() || loginForm.invalid"
+            [zDisabled]="isLoading() || userForm.invalid"
           >
             Create Account
           </button>

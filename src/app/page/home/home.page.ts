@@ -1,3 +1,4 @@
+import { Role } from '@/model/user';
 import { AuthService } from '@/service/auth.service';
 import { ZardBreadcrumbImports } from '@/shared/components/breadcrumb/breadcrumb.imports';
 import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
@@ -8,6 +9,11 @@ import { Component, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+
+interface Menu {
+  title: string;
+  items: MenuItem[];
+}
 
 interface MenuItem {
   icon: ZardIcon;
@@ -37,10 +43,32 @@ interface MenuItem {
 export class HomePage implements OnInit {
   readonly sidebarCollapsed = signal(false);
   pageTitle = signal('');
-  mainMenuItems: MenuItem[] = [
-    { icon: 'file-text', label: 'API Keys', page: 'apiKeys' },
-    { icon: 'book-open', label: 'API Documents', page: 'api-docs' },
+  menus: Menu[] = [
+    {
+      title: 'API', items: [
+        { icon: 'file-text', label: 'API Keys', page: 'apiKeys' },
+        { icon: 'book-open', label: 'API Documents', page: 'api-docs' }
+      ]
+    }
   ];
+  adminMenu: Menu[] = [
+    {
+      title: 'Order', items: [
+        { icon: 'inbox', label: 'Order Management', page: 'orders' }
+      ]
+    },
+    {
+      title: 'Catalog', items: [
+        { icon: 'folder-plus', label: 'Upload Product', page: 'upload-product' }
+      ]
+    },
+    {
+      title: 'User', items: [
+        { icon: 'users', label: 'User Management', page: 'users' }
+      ]
+    }
+  ]
+
   name = signal('');
   email = signal('');
 
@@ -67,6 +95,9 @@ export class HomePage implements OnInit {
       if (resp) {
         this.name.set(resp.name);
         this.email.set(resp.email);
+        if (resp.role == Role.ADMIN) {
+          this.menus = this.menus.concat(this.adminMenu);
+        }
       }
     })
   }

@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
 export class SignupPage {
   isLoading = signal(false);
 
-  loginForm = new FormGroup({
+  userForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(1), Validators.maxLength(255)]),
     department: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]),
@@ -54,7 +54,7 @@ export class SignupPage {
   signup(event: Event) {
     event.preventDefault();
     this.isLoading.set(true);
-    const { name, email, department, password, confirmPassword } = this.loginForm.value;
+    const { name, email, department, password } = this.userForm.value;
     const dto = new UserCreateDto(name!, email!, department!, password!);
     this.userService.create(dto).subscribe(resp => {
       this.isLoading.set(false);

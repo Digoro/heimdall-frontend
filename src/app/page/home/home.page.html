@@ -38,20 +38,22 @@
         "
       >
         <z-sidebar-group>
-          @if (!sidebarCollapsed()) {
-            <z-sidebar-group-label>API</z-sidebar-group-label>
-          }
-          @for (item of mainMenuItems; track item.label) {
-            <a
-              [routerLink]="item.page"
-              routerLinkActive="active-menu"
-              class="flex gap-1 items-center p-2.5 rounded-[10px]"
-            >
-              <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
-              @if (!sidebarCollapsed()) {
-                <span class="text-sm font-medium">{{ item.label }}</span>
-              }
-            </a>
+          @for (menu of menus; track menu.title) {
+            @if (!sidebarCollapsed()) {
+              <z-sidebar-group-label>{{ menu.title }}</z-sidebar-group-label>
+            }
+            @for (item of menu.items; track item.label) {
+              <a
+                [routerLink]="item.page"
+                routerLinkActive="active-menu"
+                class="flex gap-1 items-center p-2.5 rounded-[10px]"
+              >
+                <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+                @if (!sidebarCollapsed()) {
+                  <span class="text-sm font-medium">{{ item.label }}</span>
+                }
+              </a>
+            }
           }
         </z-sidebar-group>
 

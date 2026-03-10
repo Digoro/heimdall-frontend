@@ -30,6 +30,9 @@ export class AuthService {
     return of(user);
   }
 
+  getCurrentUserFromServer(): Observable<User> {
+    return this.http.get<User>('/auth/user');
+  }
 
   setToken(token: string) {
     this.removeToken();
@@ -53,9 +56,5 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.token;
     return token ? !this.jwtHelper.isTokenExpired(token) : false;
-  }
-
-  getCuurentUserFromServer(): Observable<User> {
-    return this.http.get<User>('/auth/user');
   }
 }

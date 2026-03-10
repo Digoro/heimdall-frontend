@@ -1,0 +1,88 @@
+<div class="flex flex-col gap-4 p-4">
+  <div class="flex justify-between gap-3">
+    <div>
+      <form [formGroup]="searchForm" class="flex w-100 gap-3">
+        <z-input-group [zAddonBefore]="search">
+          <input z-input placeholder="Search..." formControlName="term" />
+        </z-input-group>
+        <ng-template #search><z-icon zType="search" /></ng-template>
+        <div class="flex w-100 gap-4">
+          <z-select
+            zPlaceholder="Select Roles"
+            [zMultiple]="true"
+            [zMaxLabelCount]="3"
+            [(zValue)]="selectedValues"
+            (zSelectionChange)="selectChange()"
+          >
+            @for (role of roles; track $index) {
+              <z-select-item [zValue]="role">{{ role }}</z-select-item>
+            }
+          </z-select>
+        </div>
+      </form>
+    </div>
+
+    <button z-button (click)="openAddDialog()"><i z-icon zType="plus"></i>Add New User</button>
+  </div>
+
+  <div class="rounded-md border mb-3 h-fit">
+    <table z-table>
+      <thead z-table-header>
+        <tr z-table-row>
+          <th z-table-head>Index</th>
+          <th z-table-head>User ID</th>
+          <th z-table-head>Email</th>
+          <th z-table-head>Name</th>
+          <th z-table-head>Department</th>
+          <th z-table-head>Role</th>
+          <th z-table-head>API Daily Usage/Limit</th>
+          <th z-table-head>API Monthly Usage/Limit</th>
+          <th z-table-head>Created</th>
+          <th z-table-head></th>
+        </tr>
+      </thead>
+      <tbody z-table-body>
+        @for (user of users(); track user.id; let idx = $index) {
+          <tr z-table-row>
+            <td z-table-cell>{{ (meta().currentPage - 1) * meta().itemsPerPage + (idx + 1) }}</td>
+            <td z-table-cell>{{ user.id }}</td>
+            <td z-table-cell>{{ user.email }}</td>
+            <td z-table-cell>{{ user.name }}</td>
+            <td z-table-cell>{{ user.department }}</td>
+            <td z-table-cell>{{ user.role }}</td>
+            <td z-table-cell>{{ user.dailyUsage }} / {{ user.dailyLimit }}</td>
+            <td z-table-cell>{{ user.monthlyUsage }} / {{ user.monthlyLimit }}</td>
+            <td z-table-cell>{{ user.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td z-table-cell>
+              <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
+                <i z-icon zType="ellipsis"></i>
+                <ng-template #menu>
+                  <div z-menu-content class="w-48">
+                    <button type="button" z-menu-item (click)="update(user)">
+                      <i z-icon zType="user"></i>
+                      Update
+                    </button>
+                    <z-divider zSpacing="sm" />
+                    <button type="button" z-menu-item class="text-red-500" (click)="delete(user)">
+                      <i z-icon zType="trash"></i>
+                      Delete
+                    </button>
+                  </div>
+                </ng-template>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr z-table-row>
+            <td z-table-cell [attr.colspan]="8" class="h-60 text-center">No results.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <z-pagination
+    [zTotal]="meta().totalPages"
+    [(zPageIndex)]="meta().currentPage"
+    (zPageIndexChange)="pageChange($event)"
+  />
+</div>
