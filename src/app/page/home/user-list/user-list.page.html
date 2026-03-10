@@ -38,6 +38,7 @@
           <th z-table-head>API Daily Usage/Limit</th>
           <th z-table-head>API Monthly Usage/Limit</th>
           <th z-table-head>Created</th>
+          <th z-table-head>Approval</th>
           <th z-table-head></th>
         </tr>
       </thead>
@@ -54,10 +55,23 @@
             <td z-table-cell>{{ user.monthlyUsage }} / {{ user.monthlyLimit }}</td>
             <td z-table-cell>{{ user.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>
+              @if (user.isApproved) {
+                <i z-icon zType="circle-check" class="text-green-500"></i>
+              } @else {
+                <i z-icon zType="ban" class="text-red-500"></i>
+              }
+            </td>
+            <td z-table-cell>
               <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
                 <i z-icon zType="ellipsis"></i>
                 <ng-template #menu>
                   <div z-menu-content class="w-48">
+                    @if (!user.isApproved) {
+                      <button type="button" z-menu-item (click)="approval(user)">
+                        <i z-icon zType="circle-check"></i>
+                        Approval
+                      </button>
+                    }
                     <button type="button" z-menu-item (click)="update(user)">
                       <i z-icon zType="user"></i>
                       Update
@@ -85,7 +99,7 @@
       <p class="text-sm text-gray-500">Total: {{ meta().totalItems }}</p>
     </div>
     <div class="flex">
-      <z-select [(zValue)]="rows" class="w-25" (zValueChange)="rowsChange()">
+      <z-select [(zValue)]="rows" class="w-22" (zValueChange)="rowsChange()">
         <z-select-item zValue="10">10</z-select-item>
         <z-select-item zValue="20">20</z-select-item>
         <z-select-item zValue="30">30</z-select-item>

@@ -157,6 +157,8 @@ export class UserListPage implements OnInit {
           });
         } else {
           const dto = instance.userForm.value as UserUpdateDto;
+          dto.dailyLimit = +dto.dailyLimit!;
+          dto.monthlyLimit = +dto.monthlyLimit!;
           this.userService.update(user.id, dto).subscribe(resp => {
             this.searchUsers(1);
             toast.success('User updated successfully', {
@@ -191,6 +193,15 @@ export class UserListPage implements OnInit {
         })
       }
     });
+  }
+
+  approval(user: User) {
+    this.userService.update(user.id, { isApproved: true }).subscribe(resp => {
+      this.searchUsers(1);
+      toast.success('User approved successfully', {
+        description: 'The user has been successfully approved.',
+      });
+    })
   }
 }
 

@@ -11,6 +11,7 @@ export class User {
     public dailyLimit: number,
     public monthlyUsage: number,
     public monthlyLimit: number,
+    public isApproved: boolean,
     public createdAt: Date,
     public updatedAt: Date
   ) { }
@@ -37,12 +38,13 @@ export class UserCreateDto {
 
 export class UserUpdateDto {
   constructor(
-    public name: string,
-    public email: string,
-    public department: string,
-    public role: Role,
-    public dailyLimit: number,
-    public monthlyLimit: number
+    public name?: string,
+    public email?: string,
+    public department?: string,
+    public role?: Role,
+    public dailyLimit?: number,
+    public monthlyLimit?: number,
+    public isApproved?: boolean
   ) { }
 }
 

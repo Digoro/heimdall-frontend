@@ -22,8 +22,6 @@ export class UserService {
   }
 
   update(id: number, dto: UserUpdateDto): Observable<User> {
-    dto.dailyLimit = +dto.dailyLimit;
-    dto.monthlyLimit = +dto.monthlyLimit;
     return this.http.put<User>(`/api/users/${id}`, dto);
   }
 }
