@@ -5,7 +5,8 @@ import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { ZardMenuImports } from '@/shared/components/menu';
 import { ZardToastComponent } from '@/shared/components/toast';
-import { Component, OnInit, signal } from "@angular/core";
+import { ZardDarkMode } from '@/shared/services';
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
@@ -38,7 +39,6 @@ interface MenuItem {
 
   ],
   templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
   readonly sidebarCollapsed = signal(false);
@@ -71,6 +71,8 @@ export class HomePage implements OnInit {
 
   name = signal('');
   email = signal('');
+  darkModeService = inject(ZardDarkMode);
+  darkMode = signal('white');
 
   constructor(
     private router: Router,
@@ -80,6 +82,7 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.darkMode.set(this.darkModeService.currentTheme());
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -100,6 +103,11 @@ export class HomePage implements OnInit {
         }
       }
     })
+  }
+
+  toggleTheme(): void {
+    this.darkModeService.toggleTheme();
+    this.darkMode.set(this.darkModeService.currentTheme());
   }
 
   logout() {

@@ -50,20 +50,15 @@
             <td z-table-cell>{{ apiKey.maskKey }}</td>
             <td z-table-cell>
               @if (apiKey.status == 'Active') {
-                <z-badge zType="outline" class="text-gray-500">
-                  <z-icon zType="circle-check" class="text-green-500" />
-                  {{ apiKey.status }}</z-badge
-                >
+                <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                  <z-icon zType="circle-check" />
+                  {{ apiKey.status }}
+                </z-badge>
               } @else if (apiKey.status == 'Inactive') {
-                <z-badge zType="outline" class="text-gray-500">
-                  <z-icon zType="ban" class="text-gray-500" />
-                  {{ apiKey.status }}</z-badge
-                >
-              } @else if (apiKey.status == 'Expired') {
-                <z-badge zType="outline" class="text-gray-500">
-                  <z-icon zType="x" class="text-red-500" />
-                  {{ apiKey.status }}</z-badge
-                >
+                <z-badge zType="secondary">
+                  <z-icon zType="ban" />
+                  {{ apiKey.status }}
+                </z-badge>
               }
             </td>
             <td z-table-cell>{{ apiKey.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
@@ -92,7 +87,12 @@
                       </button>
                       <z-divider zSpacing="sm" />
                     }
-                    <button type="button" z-menu-item class="text-red-500" (click)="delete(apiKey)">
+                    <button
+                      type="button"
+                      z-menu-item
+                      class="text-red-500 dark:text-red-300"
+                      (click)="delete(apiKey)"
+                    >
                       <i z-icon zType="trash"></i>
                       Delete
                     </button>

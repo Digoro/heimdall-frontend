@@ -1,3 +1,5 @@
+import { Catalog } from "./catalog";
+import { Imaging } from "./imaging";
 import { User } from "./user";
 
 export class Order {
@@ -15,6 +17,8 @@ export class Order {
     public failedAt: Date,
     public canceledAt: Date,
     public user: User,
+    public catalog: Catalog,
+    public imaging: Imaging,
     public createdAt: Date,
     public updatedAt: Date
   ) { }
@@ -47,5 +51,11 @@ export class OrderSearchDto {
     public email?: string,
     public statusList?: OrderStatus[],
     public typeList?: OrderType[]
+  ) { }
+}
+
+export class OrderUpdateDto {
+  constructor(
+    public status: OrderStatus
   ) { }
 }

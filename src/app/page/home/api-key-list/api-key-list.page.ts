@@ -16,6 +16,7 @@ import { ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
 import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
+import { toast } from "ngx-sonner";
 import { AddAPIKeyComponent } from "./add-api-key.component";
 import { NewAPIKeyComponent } from "./new-api-key.component";
 
@@ -41,7 +42,6 @@ import { NewAPIKeyComponent } from "./new-api-key.component";
     AuthService
   ],
   templateUrl: './api-key-list.page.html',
-  styleUrls: ['./api-key-list.page.scss'],
 })
 export class APIKeyPage implements OnInit {
   private alertDialogService = inject(ZardAlertDialogService);
@@ -115,12 +115,18 @@ export class APIKeyPage implements OnInit {
 
   inActive(apiKey: APIKey) {
     this.apiService.update(apiKey.id, { status: APIKeyStatus.INACTIVE }).subscribe(resp => {
+      toast.success('API key inactived successfully', {
+        description: 'The user has been successfully approved.',
+      });
       this.searchAPIKeys(this.meta().currentPage);
     });
   }
 
   active(apiKey: APIKey) {
     this.apiService.update(apiKey.id, { status: APIKeyStatus.ACTIVE }).subscribe(resp => {
+      toast.success('API key actived successfully', {
+        description: 'The user has been successfully approved.',
+      });
       this.searchAPIKeys(this.meta().currentPage);
     });
   }
@@ -136,6 +142,9 @@ export class APIKeyPage implements OnInit {
       zOnOk: () => {
         this.apiService.delete(apiKey.id).subscribe(resp => {
           this.searchAPIKeys(this.meta().currentPage);
+          toast.success('API key deleted successfully', {
+            description: 'API key has been successfully deleted.',
+          });
         });
       }
     });

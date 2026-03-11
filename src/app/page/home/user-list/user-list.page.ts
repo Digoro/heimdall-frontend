@@ -3,6 +3,7 @@ import { Role, User, UserCreateDto, UserUpdateDto } from "@/model/user";
 import { AuthService } from "@/service/auth.service";
 import { UserService } from "@/service/user.service";
 import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
+import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardDividerComponent } from "@/shared/components/divider";
@@ -17,7 +18,6 @@ import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { toast } from "ngx-sonner";
-import { debounceTime, distinctUntilChanged } from "rxjs";
 import { AddUserComponent } from "./add-user.component";
 import { EditUserComponent } from "./edit-user.component";
 
@@ -36,14 +36,14 @@ import { EditUserComponent } from "./edit-user.component";
     ZardSelectImports,
     ZardInputDirective,
     ZardInputGroupComponent,
-    ZardDividerComponent
+    ZardDividerComponent,
+    ZardBadgeComponent
   ],
   providers: [
     UserService,
     AuthService
   ],
   templateUrl: './user-list.page.html',
-  styleUrls: ['./user-list.page.scss'],
 })
 export class UserListPage implements OnInit {
   fb = inject(FormBuilder);
@@ -73,19 +73,9 @@ export class UserListPage implements OnInit {
 
   ngOnInit(): void {
     this.searchUsers(1);
-    this.searchForm.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe(resp => {
-      this.searchUsers(1);
-    });
   }
 
-  selectChange() {
-    this.searchUsers(1);
-  }
-
-  private searchUsers(page: number) {
+  searchUsers(page: number) {
     const limit = +this.rows;
     const term = this.searchForm.controls.term.value!;
     const roles = this.selectedValues();

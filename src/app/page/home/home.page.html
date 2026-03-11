@@ -14,8 +14,12 @@
           </z-breadcrumb>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <img src="Hanwha Systems_RGB_43_EH.png" width="164" />
+      <div class="flex items-center gap-4">
+        @if (darkMode() == 'dark') {
+          <img src="Hanwha Systems_CMYK_43_EH_w.png" width="164" />
+        } @else {
+          <img src="Hanwha Systems_RGB_43_EH.png" width="164" />
+        }
       </div>
     </div>
   </z-header>
@@ -43,16 +47,29 @@
               <z-sidebar-group-label>{{ menu.title }}</z-sidebar-group-label>
             }
             @for (item of menu.items; track item.label) {
-              <a
-                [routerLink]="item.page"
-                routerLinkActive="active-menu"
-                class="flex gap-1 items-center p-2.5 rounded-[10px]"
-              >
-                <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
-                @if (!sidebarCollapsed()) {
-                  <span class="text-sm font-medium">{{ item.label }}</span>
-                }
-              </a>
+              @if (darkMode() == 'dark') {
+                <a
+                  [routerLink]="item.page"
+                  routerLinkActive="bg-primary text-black"
+                  class="flex gap-1 items-center p-2.5 rounded-[10px]"
+                >
+                  <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+                  @if (!sidebarCollapsed()) {
+                    <span class="text-sm font-medium">{{ item.label }}</span>
+                  }
+                </a>
+              } @else {
+                <a
+                  [routerLink]="item.page"
+                  routerLinkActive="bg-primary text-white"
+                  class="flex gap-1 items-center p-2.5 rounded-[10px]"
+                >
+                  <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+                  @if (!sidebarCollapsed()) {
+                    <span class="text-sm font-medium">{{ item.label }}</span>
+                  }
+                </a>
+              }
             }
           }
         </z-sidebar-group>
@@ -81,6 +98,10 @@
 
           <ng-template #userMenu>
             <div z-menu-content class="w-48">
+              <button type="button" z-menu-item (click)="toggleTheme()">
+                <z-icon zType="dark-mode" class="mr-2" />
+                {{ darkMode() == 'dark' ? 'White Theme' : 'Dark Theme' }}
+              </button>
               <button type="button" z-menu-item (click)="logout()">
                 <z-icon zType="log-out" class="mr-2" />
                 Logout

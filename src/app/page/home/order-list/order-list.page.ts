@@ -15,7 +15,7 @@ import { ZardTableComponent } from "@/shared/components/table";
 import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
-import { debounceTime, distinctUntilChanged } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   standalone: true,
@@ -32,13 +32,12 @@ import { debounceTime, distinctUntilChanged } from "rxjs";
     ZardSelectImports,
     ZardInputDirective,
     ZardInputGroupComponent,
-    ZardBadgeComponent
+    ZardBadgeComponent,
   ],
   providers: [
     OrderService,
   ],
   templateUrl: './order-list.page.html',
-  styleUrls: ['./order-list.page.scss'],
 })
 export class OrderListPage implements OnInit {
   fb = inject(FormBuilder);
@@ -51,6 +50,10 @@ export class OrderListPage implements OnInit {
     email: [''],
   });
 
+  rows = '10';
+  page = signal(1);
+  limit = signal(10);
+
   orders = signal<Order[]>([]);
   meta = signal<PaginationMeta>({
     totalItems: 0,
@@ -59,45 +62,56 @@ export class OrderListPage implements OnInit {
     totalPages: 0,
     currentPage: 0
   });
-  rows = '10';
   dialogService = inject(ZardDialogService);
   alertDialogService = inject(ZardAlertDialogService);
 
   constructor(
-    public orderService: OrderService,
+    private orderService: OrderService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.searchOrders(1);
-    this.searchForm.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe(resp => {
-      this.searchOrders(1);
-    });
+    this.route.queryParams.subscribe(params => {
+      const { page, limit, email, statusList, typeList } = params;
+      if (page) this.page.set(+page);
+      if (limit) {
+        this.limit.set(+limit);
+        this.rows = `${limit}`;
+      }
+      if (email) this.searchForm.controls.email.setValue(email);
+      if (statusList) this.selectedStatusList.set(statusList ? (typeof (statusList) == 'string' ? [statusList] : statusList) : undefined);
+      if (typeList) this.selectedTypeList.set(typeList ? (typeof (typeList) == 'string' ? [typeList] : typeList) : undefined);
+      this.orderService.search({ page: this.page(), limit: this.limit(), email, statusList: this.selectedStatusList(), typeList: this.selectedTypeList() }).subscribe(resp => {
+        this.orders.set(resp.items);
+        this.meta.set(resp.meta);
+      });
+    })
   }
 
-  statusSelectChange() {
-    this.searchOrders(1);
-  }
-
-  private searchOrders(page: number) {
-    const limit = +this.rows;
+  searchOrders(page?: number) {
+    if (page) this.page.set(1);
     const email = this.searchForm.controls.email.value!;
     const statusList = this.selectedStatusList();
     const typeList = this.selectedTypeList();
-    this.orderService.search({ page, limit, email, statusList, typeList }).subscribe(resp => {
-      this.orders.set(resp.items);
-      this.meta.set(resp.meta);
-    });
+    this.router.navigate([], {
+      queryParams: { page: this.page(), limit: this.limit(), email, statusList, typeList },
+      queryParamsHandling: 'replace'
+    })
   }
 
   rowsChange() {
-    this.searchOrders(1);
+    this.page.set(1);
+    this.limit.set(+this.rows);
+    this.searchOrders();
   }
 
   pageChange(event: number) {
-    this.searchOrders(event);
+    this.page.set(event);
+    this.searchOrders();
+  }
+
+  viewDetail(order: Order) {
+    this.router.navigate(['/orders', order.id])
   }
 }
-

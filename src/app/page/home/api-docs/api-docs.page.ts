@@ -10,7 +10,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     AuthService
   ],
   templateUrl: './api-docs.page.html',
-  styleUrls: ['./api-docs.page.scss'],
 })
 export class APIDocsPage {
   swaggerUrl: SafeResourceUrl = '';

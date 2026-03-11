@@ -1,0 +1,178 @@
+<div class="p-4 space-y-6">
+  <div>
+    <z-icon zType="arrow-left" class="w-4 h-4 cursor-pointer" (click)="back()" />
+  </div>
+  @if (order().id) {
+    <div class="flex gap-4">
+      <z-card class="w-full md:w-94" zTitle="Order">
+        <table z-table>
+          <tr z-table-row>
+            <th z-table-head>Order ID</th>
+            <td z-table-cell>{{ order().id }}</td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>Type</th>
+            <td z-table-cell>
+              @if (order().type == 'ArchvingOrder') {
+                <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                  <z-icon zType="archive" />
+                  Archving Order
+                </z-badge>
+              } @else if (order().type == 'TaskingOrder') {
+                <z-badge class="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  <z-icon zType="zap" />
+                  Tasking Order
+                </z-badge>
+              }
+            </td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>Status</th>
+            <td z-table-cell>
+              <form [formGroup]="form">
+                <z-select
+                  zPlaceholder="Select Status"
+                  formControlName="status"
+                  (zSelectionChange)="changeStatus()"
+                >
+                  @for (status of orderStatusList; track $index) {
+                    <z-select-item [zValue]="status">{{ status }}</z-select-item>
+                  }
+                </z-select>
+              </form>
+            </td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>ProductLevel</th>
+            <td z-table-cell>{{ order().productLevel }}</td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>Created</th>
+            <td z-table-cell>{{ order().createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+          </tr>
+        </table>
+      </z-card>
+
+      @if (order().user) {
+        <z-card class="w-full md:w-94" zTitle="User">
+          <table z-table>
+            <tr z-table-row>
+              <th z-table-head>Name</th>
+              <td z-table-cell>{{ order().user.name }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Email</th>
+              <td z-table-cell>{{ order().user.email }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Department</th>
+              <td z-table-cell>{{ order().user.department }}</td>
+            </tr>
+          </table>
+        </z-card>
+      }
+    </div>
+
+    <div class="flex gap-4 items-start">
+      @if (order().catalog) {
+        <z-card class="w-full md:w-94" zTitle="Catalog">
+          <table z-table>
+            <tr z-table-row>
+              <th z-table-head>Catalog ID</th>
+              <td z-table-cell>{{ order().catalog.id }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Imaging Mode</th>
+              <td z-table-cell>{{ order().catalog.imagingMode }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>imaging Start At</th>
+              <td z-table-cell>
+                {{ order().catalog.imagingStartAt | date: 'yyyy-MM-dd HH:mm:ss' }}
+              </td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Imaging End At</th>
+              <td z-table-cell>{{ order().catalog.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Corner Coordinates</th>
+              <td z-table-cell>
+                topLeft: {{ order().catalog.cornerCoordinates.topLeft.x }},
+                {{ order().catalog.cornerCoordinates.topLeft.y }} <br />
+                topRight: {{ order().catalog.cornerCoordinates.topRight.x }},
+                {{ order().catalog.cornerCoordinates.topRight.y }} <br />
+                bottomLeft: {{ order().catalog.cornerCoordinates.bottomLeft.x }},
+                {{ order().catalog.cornerCoordinates.bottomLeft.y }} <br />
+                bottomRight: {{ order().catalog.cornerCoordinates.bottomRight.x }},
+                {{ order().catalog.cornerCoordinates.bottomRight.y }}
+              </td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Target</th>
+              <td z-table-cell>{{ order().catalog.target }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Polarization</th>
+              <td z-table-cell>{{ order().catalog.polarization }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Resolution</th>
+              <td z-table-cell>{{ order().catalog.resolution }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>GeoTransform</th>
+              <td z-table-cell>{{ order().catalog.geoTransform }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>NadirAngle</th>
+              <td z-table-cell>{{ order().catalog.nadirAngle }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>OffNadirAngle</th>
+              <td z-table-cell>{{ order().catalog.offNadirAngle }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Band Color Interp</th>
+              <td z-table-cell>{{ order().catalog.bandColorInterp }}</td>
+            </tr>
+          </table>
+        </z-card>
+      }
+
+      @if (order().imaging) {
+        <z-card class="w-full md:w-94" zTitle="Imaging">
+          <table z-table>
+            <tr z-table-row>
+              <th z-table-head>Imaging Mode</th>
+              <td z-table-cell>{{ order().catalog.imagingMode }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>imaging Start At</th>
+              <td z-table-cell>
+                {{ order().catalog.imagingStartAt | date: 'yyyy-MM-dd HH:mm:ss' }}
+              </td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Imaging End At</th>
+              <td z-table-cell>{{ order().catalog.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Corner Coordinates</th>
+              <td z-table-cell>
+                topLeft: {{ order().catalog.cornerCoordinates.topLeft.x }},
+                {{ order().catalog.cornerCoordinates.topLeft.y }} <br />
+                topRight: {{ order().catalog.cornerCoordinates.topRight.x }},
+                {{ order().catalog.cornerCoordinates.topRight.y }} <br />
+                bottomLeft: {{ order().catalog.cornerCoordinates.bottomLeft.x }},
+                {{ order().catalog.cornerCoordinates.bottomLeft.y }} <br />
+                bottomRight: {{ order().catalog.cornerCoordinates.bottomRight.x }},
+                {{ order().catalog.cornerCoordinates.bottomRight.y }}
+              </td>
+            </tr>
+          </table>
+        </z-card>
+      }
+    </div>
+  }
+</div>

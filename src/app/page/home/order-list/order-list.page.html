@@ -1,40 +1,35 @@
 <div class="flex flex-col gap-4 p-4">
-  <div class="flex justify-between gap-3">
-    <div>
-      <form [formGroup]="searchForm" class="flex w-200 gap-3">
-        <z-input-group [zAddonBefore]="search">
-          <input z-input placeholder="User email" formControlName="email" />
-        </z-input-group>
-        <ng-template #search><z-icon zType="search" /></ng-template>
-        <div class="flex w-200 gap-4">
-          <z-select
-            zPlaceholder="Select Type"
-            [zMultiple]="true"
-            [zMaxLabelCount]="3"
-            [(zValue)]="selectedTypeList"
-            (zSelectionChange)="statusSelectChange()"
-          >
-            @for (orderStatus of orderTypeList; track $index) {
-              <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
-            }
-          </z-select>
-        </div>
-        <div class="flex w-200 gap-4">
-          <z-select
-            zPlaceholder="Select Status"
-            [zMultiple]="true"
-            [zMaxLabelCount]="3"
-            [(zValue)]="selectedStatusList"
-            (zSelectionChange)="statusSelectChange()"
-          >
-            @for (orderStatus of orderStatusList; track $index) {
-              <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
-            }
-          </z-select>
-        </div>
-      </form>
+  <form [formGroup]="searchForm" class="flex w-200 gap-3 items-center">
+    <z-input-group [zAddonBefore]="search">
+      <input z-input placeholder="User email" formControlName="email" />
+    </z-input-group>
+    <ng-template #search><z-icon zType="mail" /></ng-template>
+    <div class="flex w-200 gap-4">
+      <z-select
+        zPlaceholder="Select Type"
+        [zMultiple]="true"
+        [zMaxLabelCount]="2"
+        [(zValue)]="selectedTypeList"
+      >
+        @for (orderStatus of orderTypeList; track $index) {
+          <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
+        }
+      </z-select>
     </div>
-  </div>
+    <div class="flex w-200 gap-4">
+      <z-select
+        zPlaceholder="Select Status"
+        [zMultiple]="true"
+        [zMaxLabelCount]="2"
+        [(zValue)]="selectedStatusList"
+      >
+        @for (orderStatus of orderStatusList; track $index) {
+          <z-select-item [zValue]="orderStatus">{{ orderStatus }}</z-select-item>
+        }
+      </z-select>
+    </div>
+    <button z-button (click)="searchOrders(1)">Search</button>
+  </form>
 
   <div class="rounded-md border h-fit">
     <table z-table>
@@ -56,14 +51,27 @@
             <td z-table-cell>{{ (meta().currentPage - 1) * meta().itemsPerPage + (idx + 1) }}</td>
             <td z-table-cell>{{ order.id }}</td>
             <td z-table-cell>
-              {{ order.user.name }} / {{ order.user.email }} / {{ order.user.department }}
+              <span>{{ order.user.email }}</span
+              ><br />
+              <span class="text-sm text-gray-400"
+                >{{ order.user.name }} / {{ order.user.department }}</span
+              >
             </td>
-
             <td z-table-cell>
-              <z-badge zType="outline" class="text-gray-500"> {{ order.type }}</z-badge>
+              @if (order.type == 'ArchvingOrder') {
+                <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                  <z-icon zType="archive" />
+                  Archving Order
+                </z-badge>
+              } @else if (order.type == 'TaskingOrder') {
+                <z-badge class="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  <z-icon zType="zap" />
+                  Tasking Order
+                </z-badge>
+              }
             </td>
             <td z-table-cell>
-              <z-badge zType="outline" class="text-gray-500"> {{ order.status }}</z-badge>
+              <z-badge zType="secondary">{{ order.status }}</z-badge>
             </td>
             <td z-table-cell>{{ order.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>{{ order.updatedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
@@ -73,13 +81,9 @@
 
                 <ng-template #menu>
                   <div z-menu-content class="w-48">
-                    <button type="button" z-menu-item>
+                    <button type="button" z-menu-item (click)="viewDetail(order)">
                       <i z-icon zType="info"></i>
                       View Detail
-                    </button>
-                    <button type="button" z-menu-item>
-                      <i z-icon zType="zap"></i>
-                      Update Status
                     </button>
                     <button type="button" z-menu-item>
                       <i z-icon zType="chevron-up"></i>
