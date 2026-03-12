@@ -2,7 +2,7 @@
   <div class="flex gap-4">
     <z-card class="w-full md:w-56">
       <div class="flex justify-between items-center mb-2">
-        <p class="text-sm text-gray-400">Daily Usage</p>
+        <p class="text-sm">Daily Usage</p>
         <z-badge zType="outline">{{ dailyStat() }}%</z-badge>
       </div>
       <div class="mb-3 text-2xl font-semibold">{{ dailyUsage() }} / {{ dailyLimit() }}</div>
@@ -12,7 +12,7 @@
 
     <z-card class="w-full md:w-56">
       <div class="flex justify-between items-center mb-2">
-        <p class="text-sm text-gray-400">Monthly Usage</p>
+        <p class="text-sm">Monthly Usage</p>
         <z-badge zType="outline">{{ monthlyStat() }}%</z-badge>
       </div>
       <div class="mb-3 text-2xl font-semibold">{{ monthlyUsage() }} / {{ monthlyLimit() }}</div>

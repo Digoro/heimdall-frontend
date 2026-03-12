@@ -37,7 +37,7 @@ export class AuthService {
   setToken(token: string) {
     this.removeToken();
     const now = new Date()
-    now.setHours(now.getHours() + 1);
+    now.setHours(now.getHours() + 30);
     this.cookieService.set(this.OMS_ACCESS_TOKEN, token, { expires: now });
   }
 

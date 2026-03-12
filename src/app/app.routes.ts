@@ -15,7 +15,8 @@ export const routes: Routes = [
             { path: 'api-docs', canActivate: [authGuard], loadComponent: () => import('./page/home/api-docs/api-docs.page').then(m => m.APIDocsPage), data: { pageTitle: 'API Docs' } },
             { path: 'users', canActivate: [authGuard, RoleGuard], loadComponent: () => import('./page/home/user-list/user-list.page').then(m => m.UserListPage), data: { pageTitle: 'User Management', roles: [Role.ADMIN] } },
             { path: 'orders', canActivate: [authGuard, RoleGuard], loadComponent: () => import('./page/home/order-list/order-list.page').then(m => m.OrderListPage), data: { pageTitle: 'Order Management', roles: [Role.ADMIN] }, },
-            { path: 'orders/:id', canActivate: [authGuard, RoleGuard], loadComponent: () => import('./page/home/order-detail/order-detail.page').then(m => m.OrderDetailPage), data: { pageTitle: 'Order Management', roles: [Role.ADMIN] } }
+            { path: 'orders/:id', canActivate: [authGuard, RoleGuard], loadComponent: () => import('./page/home/order-detail/order-detail.page').then(m => m.OrderDetailPage), data: { pageTitle: 'Order Management', roles: [Role.ADMIN] } },
+            { path: 'upload-product', canActivate: [authGuard, RoleGuard], loadComponent: () => import('./page/home/product-upload/product-upload.page').then(m => m.ProductUploadPage), data: { pageTitle: 'Order Management', roles: [Role.ADMIN] } }
         ],
     },
     { path: '**', redirectTo: '' }
