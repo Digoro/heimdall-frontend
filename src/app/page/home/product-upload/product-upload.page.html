@@ -112,7 +112,9 @@
       <p class="text-sm text-gray-400">
         When you enter an order ID, the order status automatically changes to 'Completed'
       </p>
-      <input z-input type="text" placeholder="Order ID" />
+      <form [formGroup]="form">
+        <input z-input type="text" placeholder="Order ID" formControlName="orderId" />
+      </form>
     </div>
   </z-card>
 

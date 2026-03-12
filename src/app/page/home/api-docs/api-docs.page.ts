@@ -1,5 +1,5 @@
-import { AuthService } from '@/service/auth.service';
-import { Component } from '@angular/core';
+import { ThemeService } from '@/service/theme.service';
+import { Component, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -7,15 +7,25 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   standalone: true,
   imports: [],
   providers: [
-    AuthService
   ],
   templateUrl: './api-docs.page.html',
 })
-export class APIDocsPage {
-  swaggerUrl: SafeResourceUrl = '';
+export class APIDocsPage implements OnInit {
+  swaggerUrl = signal<SafeResourceUrl | null>(null);
 
   constructor(
-    private santizer: DomSanitizer) {
-    this.swaggerUrl = this.santizer.bypassSecurityTrustResourceUrl('http://localhost:3000/api-docs');
+    private santizer: DomSanitizer,
+    private themeService: ThemeService) {
+  }
+
+  ngOnInit(): void {
+    this.setUrl(this.themeService.themeMode);
+    this.themeService.themeChanged.subscribe(mode => {
+      this.setUrl(mode);
+    })
+  }
+
+  setUrl(mode: string) {
+    this.swaggerUrl.set(this.santizer.bypassSecurityTrustResourceUrl(mode == 'dark' ? 'http://localhost:3000/api-docs-dark' : 'http://localhost:3000/api-docs-light'));
   }
 }

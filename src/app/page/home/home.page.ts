@@ -1,12 +1,12 @@
 import { Role } from '@/model/user';
 import { AuthService } from '@/service/auth.service';
+import { ThemeService } from '@/service/theme.service';
 import { ZardBreadcrumbImports } from '@/shared/components/breadcrumb/breadcrumb.imports';
 import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { ZardMenuImports } from '@/shared/components/menu';
 import { ZardToastComponent } from '@/shared/components/toast';
-import { ZardDarkMode } from '@/shared/services';
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
@@ -36,7 +36,6 @@ interface MenuItem {
     RouterModule,
   ],
   providers: [
-
   ],
   templateUrl: './home.page.html',
 })
@@ -68,21 +67,19 @@ export class HomePage implements OnInit {
       ]
     }
   ]
-
   name = signal('');
   email = signal('');
-  darkModeService = inject(ZardDarkMode);
-  darkMode = signal('white');
+  themeMode = signal('');
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private titleService: Title
+    private titleService: Title,
+    public themeService: ThemeService
   ) { }
 
   ngOnInit(): void {
-    this.darkMode.set(this.darkModeService.currentTheme());
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -103,11 +100,15 @@ export class HomePage implements OnInit {
         }
       }
     })
+
+    this.themeMode.set(this.themeService.themeMode);
+    this.themeService.themeChanged.subscribe(mode => {
+      this.themeMode.set(mode);
+    })
   }
 
   toggleTheme(): void {
-    this.darkModeService.toggleTheme();
-    this.darkMode.set(this.darkModeService.currentTheme());
+    this.themeService.toggle();
   }
 
   logout() {

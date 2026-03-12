@@ -114,4 +114,14 @@ export class OrderListPage implements OnInit {
   viewDetail(order: Order) {
     this.router.navigate(['/orders', order.id])
   }
+
+  uploadProduct(order: Order) {
+    this.router.navigate(['/upload-product'], {
+      queryParams: { orderId: order.id }
+    })
+  }
+
+  exportOrder(order: Order) {
+    this.orderService.exportOrder(order);
+  }
 }

@@ -59,3 +59,36 @@ export class OrderUpdateDto {
     public status: OrderStatus
   ) { }
 }
+
+export interface ArchvingOrderExportJson {
+  orderId: number;
+  catalogId: number;
+  productLevel: ProductLevel;
+  imagingMode: string;
+  imagingStartAt: string;
+  imagingEndAt: string;
+  cornerCoordinates: {
+    topLeft: { x: number; y: number },
+    topRight: { x: number; y: number },
+    bottomLeft: { x: number; y: number },
+    bottomRight: { x: number; y: number },
+  };
+  target: string;
+  polarization: string;
+  resolution: string;
+  projection: string;
+  geoTransform: string;
+  nadirAngle: number;
+  offNadirAngle: number;
+  bandColorInterp: string;
+}
+
+export interface TaskingOrderExportJson {
+  orderId: number;
+  geometry: {};
+  productLevel: ProductLevel;
+  imagingMode: string;
+  windowOpen: string;
+  windowClose: string;
+  collectionConstraints: {};
+}

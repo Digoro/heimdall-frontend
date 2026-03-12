@@ -1,6 +1,5 @@
 import { ProductService } from "@/service/product.service";
 import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
-import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardDividerComponent } from "@/shared/components/divider";
@@ -11,11 +10,10 @@ import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
 import { ZardSelectImports } from "@/shared/components/select";
 import { ZardSkeletonComponent } from "@/shared/components/skeleton";
-import { DatePipe } from "@angular/common";
 import { HttpEventType } from "@angular/common/http";
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { DomSanitizer } from "@angular/platform-browser";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { toast } from "ngx-sonner";
 
 @Component({
@@ -24,14 +22,12 @@ import { toast } from "ngx-sonner";
     ZardButtonComponent,
     ZardIconComponent,
     ZardPaginationImports,
-    DatePipe,
     ZardButtonComponent,
     ZardIconComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
     ZardInputDirective,
-    ZardBadgeComponent,
     ZardCardComponent,
     ZardProgressBarComponent,
     ZardDividerComponent,
@@ -60,14 +56,22 @@ export class ProductUploadPage implements OnInit {
   metadataFile = signal(new File([], ''));
   metadataPreview = signal('');
 
+  form = new FormGroup({
+    orderId: new FormControl('')
+  });
+
   alertDialogService = inject(ZardAlertDialogService);
 
   constructor(
     private productService: ProductService,
-    private santinizer: DomSanitizer
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      const id = params.get('orderId');
+      if (id) this.form.controls.orderId.setValue(id);
+    })
   }
 
   sarFileChange(event: any) {

@@ -75,4 +75,8 @@ export class OrderDetailPage implements OnInit {
   back() {
     this.location.back();
   }
+
+  exportOrder() {
+    this.orderService.exportOrder(this.order());
+  }
 }

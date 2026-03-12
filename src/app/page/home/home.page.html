@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="flex items-center gap-4">
-        @if (darkMode() == 'dark') {
+        @if (themeMode() == 'dark') {
           <img src="Hanwha Systems_CMYK_43_EH_w.png" width="164" />
         } @else {
           <img src="Hanwha Systems_RGB_43_EH.png" width="164" />
@@ -47,7 +47,7 @@
               <z-sidebar-group-label>{{ menu.title }}</z-sidebar-group-label>
             }
             @for (item of menu.items; track item.label) {
-              @if (darkMode() == 'dark') {
+              @if (themeMode() == 'dark') {
                 <a
                   [routerLink]="item.page"
                   routerLinkActive="bg-primary text-black"
@@ -100,7 +100,7 @@
             <div z-menu-content class="w-48">
               <button type="button" z-menu-item (click)="toggleTheme()">
                 <z-icon zType="dark-mode" class="mr-2" />
-                {{ darkMode() == 'dark' ? 'White Theme' : 'Dark Theme' }}
+                {{ themeMode() == 'dark' ? 'White Theme' : 'Dark Theme' }}
               </button>
               <button type="button" z-menu-item (click)="logout()">
                 <z-icon zType="log-out" class="mr-2" />

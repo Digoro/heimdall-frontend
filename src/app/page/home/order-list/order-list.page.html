@@ -85,11 +85,11 @@
                       <i z-icon zType="info"></i>
                       View Detail
                     </button>
-                    <button type="button" z-menu-item>
+                    <button type="button" z-menu-item (click)="uploadProduct(order)">
                       <i z-icon zType="chevron-up"></i>
                       Upload Product
                     </button>
-                    <button type="button" z-menu-item>
+                    <button type="button" z-menu-item (click)="exportOrder(order)">
                       <i z-icon zType="chevron-down"></i>
                       Export Order
                     </button>

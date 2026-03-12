@@ -1,6 +1,7 @@
 <div class="p-4 space-y-6">
-  <div>
+  <div class="flex justify-between">
     <z-icon zType="arrow-left" class="w-4 h-4 cursor-pointer" (click)="back()" />
+    <button z-button zType="outline" (click)="exportOrder()">Export Order</button>
   </div>
   @if (order().id) {
     <div class="flex gap-4">
