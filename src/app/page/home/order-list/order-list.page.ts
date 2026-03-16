@@ -64,6 +64,7 @@ export class OrderListPage implements OnInit {
   });
   dialogService = inject(ZardDialogService);
   alertDialogService = inject(ZardAlertDialogService);
+  isLoading = signal(false);
 
   constructor(
     private orderService: OrderService,
@@ -82,9 +83,13 @@ export class OrderListPage implements OnInit {
       if (email) this.searchForm.controls.email.setValue(email);
       if (statusList) this.selectedStatusList.set(statusList ? (typeof (statusList) == 'string' ? [statusList] : statusList) : undefined);
       if (typeList) this.selectedTypeList.set(typeList ? (typeof (typeList) == 'string' ? [typeList] : typeList) : undefined);
+      this.isLoading.set(true);
       this.orderService.search({ page: this.page(), limit: this.limit(), email, statusList: this.selectedStatusList(), typeList: this.selectedTypeList() }).subscribe(resp => {
+        this.isLoading.set(false);
         this.orders.set(resp.items);
         this.meta.set(resp.meta);
+      }, error => {
+        this.isLoading.set(false);
       });
     })
   }
@@ -95,7 +100,7 @@ export class OrderListPage implements OnInit {
     const statusList = this.selectedStatusList();
     const typeList = this.selectedTypeList();
     this.router.navigate([], {
-      queryParams: { page: this.page(), limit: this.limit(), email, statusList, typeList },
+      queryParams: { page: this.page(), limit: this.limit(), email, statusList, typeList, refresh: Date.now() },
       queryParamsHandling: 'replace'
     })
   }

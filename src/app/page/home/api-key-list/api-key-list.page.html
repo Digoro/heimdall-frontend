@@ -21,7 +21,8 @@
     </z-card>
   </div>
 
-  <div class="flex justify-end">
+  <div class="flex justify-end gap-2">
+    <button z-button zType="outline" (click)="refresh()" [zLoading]="isLoading()">Refresh</button>
     <button z-button (click)="openDialog()"><i z-icon zType="plus"></i>Create New Key</button>
   </div>
 

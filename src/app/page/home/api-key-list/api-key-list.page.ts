@@ -64,6 +64,8 @@ export class APIKeyPage implements OnInit {
   monthlyLimit = signal(0);
   monthlyStat = signal(0);
 
+  isLoading = signal(false);
+
   constructor(
     public apiService: APIService,
     public authService: AuthService
@@ -75,10 +77,14 @@ export class APIKeyPage implements OnInit {
   }
 
   private searchAPIKeys(page: number) {
+    this.isLoading.set(true);
     const limit = +this.rows;
     this.apiService.search({ page, limit }).subscribe(resp => {
+      this.isLoading.set(false);
       this.apiKeys.set(resp.items);
       this.meta.set(resp.meta);
+    }, error => {
+      this.isLoading.set(false);
     });
   }
 
@@ -114,7 +120,7 @@ export class APIKeyPage implements OnInit {
   }
 
   inActive(apiKey: APIKey) {
-    this.apiService.update(apiKey.id, { status: APIKeyStatus.INACTIVE }).subscribe(resp => {
+    this.apiService.updateStatus(apiKey.id, { status: APIKeyStatus.INACTIVE }).subscribe(resp => {
       toast.success('API key inactived successfully', {
         description: 'The user has been successfully approved.',
       });
@@ -123,14 +129,13 @@ export class APIKeyPage implements OnInit {
   }
 
   active(apiKey: APIKey) {
-    this.apiService.update(apiKey.id, { status: APIKeyStatus.ACTIVE }).subscribe(resp => {
+    this.apiService.updateStatus(apiKey.id, { status: APIKeyStatus.ACTIVE }).subscribe(resp => {
       toast.success('API key actived successfully', {
         description: 'The user has been successfully approved.',
       });
       this.searchAPIKeys(this.meta().currentPage);
     });
   }
-
 
   delete(apiKey: APIKey) {
     this.alertDialogService.confirm({
@@ -168,6 +173,11 @@ export class APIKeyPage implements OnInit {
         this.monthlyStat.set(Math.round(resp.monthlyUsage / resp.monthlyLimit * 100));
       }
     })
+  }
+
+  refresh() {
+    this.searchAPIKeys(1);
+    this.getAPIKeyUsage();
   }
 }
 

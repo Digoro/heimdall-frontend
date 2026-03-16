@@ -28,7 +28,7 @@
         }
       </z-select>
     </div>
-    <button z-button (click)="searchOrders(1)">Search</button>
+    <button z-button (click)="searchOrders(1)" [zLoading]="isLoading()">Search</button>
   </form>
 
   <div class="rounded-md border h-fit">

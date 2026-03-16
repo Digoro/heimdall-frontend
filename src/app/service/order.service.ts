@@ -10,16 +10,16 @@ export class OrderService {
   constructor(private http: HttpClient) { }
 
   get(id: number): Observable<Order> {
-    return this.http.get<Order>(`/api/orders/${id}`);
+    return this.http.get<Order>(`/api/orders/admin/${id}`);
   }
 
   search(dto: OrderSearchDto): Observable<Pagination<Order>> {
     if (dto.email == '') dto.email = undefined;
-    return this.http.post<Pagination<Order>>(`/api/orders/search`, dto);
+    return this.http.post<Pagination<Order>>(`/api/orders/admin/search`, dto);
   }
 
   update(id: number, dto: OrderUpdateDto): Observable<Order> {
-    return this.http.put<Order>(`/api/orders/${id}`, dto);
+    return this.http.put<Order>(`/api/orders/admin/${id}`, dto);
   }
 
   exportOrder(order: Order) {

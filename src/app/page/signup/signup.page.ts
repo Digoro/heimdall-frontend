@@ -59,8 +59,8 @@ export class SignupPage {
     this.userService.create(dto).subscribe(resp => {
       this.isLoading.set(false);
       this.alertDialogService.info({
-        zTitle: 'Registration Successful!',
-        zDescription: 'Your account has been created successfully. Please log in to continue.',
+        zTitle: 'Registration Submitted!',
+        zDescription: 'Your account has been created successfully. An administrator must approve your registration before you can log in.',
         zOkText: 'Ok',
         zOnOk: () => {
           this.router.navigate(['/home']);

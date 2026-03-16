@@ -7,7 +7,7 @@ export class ProductService {
   constructor(private http: HttpClient) { }
 
   upload(formData: any) {
-    return this.http.post('/api/products/upload', formData, {
+    return this.http.post('/api/products/admin/upload', formData, {
       reportProgress: true,
       observe: 'events'
     });

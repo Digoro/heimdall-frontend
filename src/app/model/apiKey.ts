@@ -16,7 +16,6 @@ export class APIKey {
 export enum APIKeyStatus {
   ACTIVE = "Active",
   INACTIVE = "Inactive",
-  EXPIRED = "Expired"
 }
 
 export class APIFeatureUsage {

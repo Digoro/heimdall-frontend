@@ -37,7 +37,7 @@ import { EditUserComponent } from "./edit-user.component";
     ZardInputDirective,
     ZardInputGroupComponent,
     ZardDividerComponent,
-    ZardBadgeComponent
+    ZardBadgeComponent,
   ],
   providers: [
     UserService,
@@ -65,6 +65,7 @@ export class UserListPage implements OnInit {
   });
   dialogService = inject(ZardDialogService);
   alertDialogService = inject(ZardAlertDialogService);
+  isLoading = signal(false);
 
   constructor(
     public userService: UserService,
@@ -76,12 +77,16 @@ export class UserListPage implements OnInit {
   }
 
   searchUsers(page: number) {
+    this.isLoading.set(true);
     const limit = +this.rows;
     const term = this.searchForm.controls.term.value!;
     const roles = this.selectedValues();
     this.userService.search({ page, limit, term, roles }).subscribe(resp => {
+      this.isLoading.set(false);
       this.users.set(resp.items);
       this.meta.set(resp.meta);
+    }, error => {
+      this.isLoading.set(false);
     });
   }
 

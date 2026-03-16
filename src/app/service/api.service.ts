@@ -1,4 +1,4 @@
-import { APIKey, APIKeyStatus, CreateAPIKeyDto, ResponseCreateAPIKey, UpdateAPIKeyDto } from '@/model/apiKey';
+import { APIKey, APIKeyStatus, CreateAPIKeyDto, ResponseCreateAPIKey, UpdateAPIKeyDto as UpdateAPIKeyStatusDto } from '@/model/apiKey';
 import { PaginationSearchDto } from '@/model/core';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,8 +18,8 @@ export class APIService {
     return this.http.post<ResponseCreateAPIKey>(`/api/apiKeys`, dto);
   }
 
-  update(id: number, dto: UpdateAPIKeyDto): Observable<{ status: APIKeyStatus }> {
-    return this.http.put<{ status: APIKeyStatus }>(`/api/apiKeys/${id}`, dto);
+  updateStatus(id: number, dto: UpdateAPIKeyStatusDto): Observable<{ status: APIKeyStatus }> {
+    return this.http.put<{ status: APIKeyStatus }>(`/api/apiKeys/status/${id}`, dto);
   }
 
   delete(id: number) {

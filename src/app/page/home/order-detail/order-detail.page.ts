@@ -4,12 +4,10 @@ import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardIconComponent } from "@/shared/components/icon";
-import { ZardInputDirective } from "@/shared/components/input";
-import { ZardInputGroupComponent } from "@/shared/components/input-group";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardSelectImports } from "@/shared/components/select";
-import { ZardTableComponent, ZardTableHeaderComponent } from "@/shared/components/table";
+import { ZardTableComponent } from "@/shared/components/table";
 import { CommonModule, DatePipe, Location } from "@angular/common";
 import { Component, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
@@ -30,10 +28,7 @@ import { toast } from "ngx-sonner";
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
-    ZardInputDirective,
-    ZardInputGroupComponent,
     ZardBadgeComponent,
-    ZardTableHeaderComponent,
     ZardCardComponent
   ],
   providers: [

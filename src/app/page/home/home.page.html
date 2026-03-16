@@ -84,7 +84,7 @@
               (sidebarCollapsed() ? 'm-2 p-0' : 'p-2')
             "
           >
-            <z-icon zType="user" class="w-6 h-6" />
+            <z-avatar [zFallback]="name().slice(0, 1)" [zSize]="32" />
 
             @if (!sidebarCollapsed()) {
               <div>

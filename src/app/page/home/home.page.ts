@@ -1,6 +1,7 @@
 import { Role } from '@/model/user';
 import { AuthService } from '@/service/auth.service';
 import { ThemeService } from '@/service/theme.service';
+import { ZardAvatarComponent } from '@/shared/components/avatar';
 import { ZardBreadcrumbImports } from '@/shared/components/breadcrumb/breadcrumb.imports';
 import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
@@ -34,6 +35,7 @@ interface MenuItem {
     RouterLinkWithHref,
     RouterLinkActive,
     RouterModule,
+    ZardAvatarComponent
   ],
   providers: [
   ],

@@ -17,7 +17,7 @@
           }
         </z-select>
       </div>
-      <button z-button (click)="searchUsers(1)">Search</button>
+      <button z-button (click)="searchUsers(1)" [zLoading]="isLoading()">Search</button>
     </form>
 
     <button z-button (click)="openAddDialog()"><i z-icon zType="plus"></i>Add New User</button>
