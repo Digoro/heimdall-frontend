@@ -4,10 +4,7 @@ import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardDividerComponent } from "@/shared/components/divider";
 import { ZardInputDirective } from "@/shared/components/input";
-import { ZardMenuImports } from "@/shared/components/menu";
-import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
-import { ZardSelectImports } from "@/shared/components/select";
 import { ZardSkeletonComponent } from "@/shared/components/skeleton";
 import { HttpEventType } from "@angular/common/http";
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from "@angular/core";
@@ -22,11 +19,8 @@ import { toast } from "ngx-sonner";
   imports: [
     NgIcon,
     ZardButtonComponent,
-    ZardPaginationImports,
     ZardButtonComponent,
-    ZardMenuImports,
     ReactiveFormsModule,
-    ZardSelectImports,
     ZardInputDirective,
     ZardCardComponent,
     ZardProgressBarComponent,

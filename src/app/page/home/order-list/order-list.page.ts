@@ -16,7 +16,7 @@ import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideArchive, lucideDownload, lucideEllipsis, lucideFolderUp, lucideInfo, lucideMail, lucideSatellite } from "@ng-icons/lucide";
+import { lucideArchive, lucideDownload, lucideEllipsis, lucideInfo, lucideMail, lucideSatellite, lucideUpload } from "@ng-icons/lucide";
 
 @Component({
   standalone: true,
@@ -41,7 +41,7 @@ import { lucideArchive, lucideDownload, lucideEllipsis, lucideFolderUp, lucideIn
   viewProviders: [
     provideIcons({
       lucideMail, lucideArchive, lucideSatellite, lucideEllipsis, lucideInfo,
-      lucideFolderUp, lucideDownload
+      lucideUpload, lucideDownload
     })
   ]
 })

@@ -10,10 +10,10 @@ import { ZardTableComponent } from "@/shared/components/table";
 import { CommonModule, DatePipe, Location } from "@angular/common";
 import { Component, OnInit, signal, viewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { toast } from "ngx-sonner";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArchive, lucideArrowLeft, lucideSatellite, lucideSquarePen } from '@ng-icons/lucide';
+import { lucideArchive, lucideArrowLeft, lucideDownload, lucideSatellite, lucideSquarePen, lucideUpload } from '@ng-icons/lucide';
 
 @Component({
   standalone: true,
@@ -37,7 +37,8 @@ import { lucideArchive, lucideArrowLeft, lucideSatellite, lucideSquarePen } from
   templateUrl: './order-detail.page.html',
   viewProviders: [
     provideIcons({
-      lucideSquarePen, lucideArchive, lucideSatellite, lucideArrowLeft
+      lucideSquarePen, lucideArchive, lucideSatellite, lucideArrowLeft,
+      lucideUpload, lucideDownload
     })
   ]
 })
@@ -54,7 +55,8 @@ export class OrderDetailPage implements OnInit {
   constructor(
     private orderService: OrderService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -88,6 +90,12 @@ export class OrderDetailPage implements OnInit {
     this.isStatusEdit.set(!this.isStatusEdit());
     setTimeout(() => {
       this.statusSelector()?.toggle();
+    })
+  }
+
+  uploadProduct() {
+    this.router.navigate(['/upload-product'], {
+      queryParams: { orderId: this.order().id }
     })
   }
 }

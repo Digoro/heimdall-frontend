@@ -1,122 +1,124 @@
 <div class="flex gap-4 p-4">
-  <z-card class="w-80">
-    <div class="space-y-4">
-      <div class="flex justify-between items-center mb-2">
-        <p class="font-bold">Upload SAR Image</p>
+  <div class="flex flex-wrap gap-4">
+    <z-card class="w-80">
+      <div class="space-y-4">
+        <div class="flex justify-between items-center mb-2">
+          <p class="font-bold">Upload SAR Image</p>
+          @if (sarFileOk()) {
+            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          }
+        </div>
+        <p class="text-sm text-gray-400">Upload the original SAR Imagery file (.tif/.tiff)</p>
+        <button z-button zType="outline" (click)="sarFileInput.click()">File Upload</button>
+        <input
+          type="file"
+          #sarFileInput
+          hidden
+          (change)="sarFileChange($event)"
+          accept=".tif, .tiff"
+        />
         @if (sarFileOk()) {
-          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          <div class="flex gap-4 items-center">
+            <div class="flex border rounded-lg p-4 border-gray-300">
+              <ng-icon name="lucideFile" class="!w-5 !h-5" />
+            </div>
+            <div>
+              <p class="break-all text-sm">{{ sarFile().name }}</p>
+              <p class="text-sm text-gray-500">{{ formatBytes(sarFile().size) }}</p>
+            </div>
+          </div>
         }
-      </div>
-      <p class="text-sm text-gray-400">Upload the original SAR Imagery file (.tif/.tiff)</p>
-      <button z-button zType="outline" (click)="sarFileInput.click()">File Upload</button>
-      <input
-        type="file"
-        #sarFileInput
-        hidden
-        (change)="sarFileChange($event)"
-        accept=".tif, .tiff"
-      />
-      @if (sarFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="flex border rounded-lg p-4 border-gray-300">
-            <ng-icon name="lucideFile" class="!w-5 !h-5" />
-          </div>
-          <div>
-            <p class="break-all text-sm">{{ sarFile().name }}</p>
-            <p class="text-sm text-gray-500">{{ formatBytes(sarFile().size) }}</p>
-          </div>
+          <z-progress-bar [progress]="sarProgress()" class="h-3" />
+          <p class="text-sm text-gray-500">{{ sarProgress() }}%</p>
         </div>
-      }
-      <div class="flex gap-4 items-center">
-        <z-progress-bar [progress]="sarProgress()" class="h-3" />
-        <p class="text-sm text-gray-500">{{ sarProgress() }}%</p>
       </div>
-    </div>
-  </z-card>
+    </z-card>
 
-  <z-card class="w-80">
-    <div class="space-y-4">
-      <div class="flex justify-between items-center mb-2">
-        <p class="font-bold">Upload Thumbnail</p>
+    <z-card class="w-80">
+      <div class="space-y-4">
+        <div class="flex justify-between items-center mb-2">
+          <p class="font-bold">Upload Thumbnail</p>
+          @if (thumbnailFileOk()) {
+            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          }
+        </div>
+        <p class="text-sm text-gray-400">Upload a preview thumbnail image (.png/.jpg/.jpeg)</p>
+        <button z-button zType="outline" (click)="thumbnailFileInput.click()">File Upload</button>
+        <input
+          type="file"
+          #thumbnailFileInput
+          hidden
+          (change)="thumbnailFileChange($event)"
+          accept=".png, .jpg, .jpeg"
+        />
         @if (thumbnailFileOk()) {
-          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          <div class="flex gap-4 items-center">
+            <div class="border rounded-lg p-4 border-gray-300 flex">
+              <ng-icon name="lucideFile" class="!w-5 !h-5" />
+            </div>
+            <div>
+              <p class="break-all text-sm">{{ thumbnailFile().name }}</p>
+              <p class="text-sm text-gray-500">{{ formatBytes(thumbnailFile().size) }}</p>
+            </div>
+          </div>
         }
-      </div>
-      <p class="text-sm text-gray-400">Upload a preview thumbnail image (.png/.jpg/.jpeg)</p>
-      <button z-button zType="outline" (click)="thumbnailFileInput.click()">File Upload</button>
-      <input
-        type="file"
-        #thumbnailFileInput
-        hidden
-        (change)="thumbnailFileChange($event)"
-        accept=".png, .jpg, .jpeg"
-      />
-      @if (thumbnailFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="border rounded-lg p-4 border-gray-300 flex">
-            <ng-icon name="lucideFile" class="!w-5 !h-5" />
-          </div>
-          <div>
-            <p class="break-all text-sm">{{ thumbnailFile().name }}</p>
-            <p class="text-sm text-gray-500">{{ formatBytes(thumbnailFile().size) }}</p>
-          </div>
+          <z-progress-bar [progress]="thumbnailProgress()" class="h-3" />
+          <p class="text-sm text-gray-500">{{ thumbnailProgress() }}%</p>
         </div>
-      }
-      <div class="flex gap-4 items-center">
-        <z-progress-bar [progress]="thumbnailProgress()" class="h-3" />
-        <p class="text-sm text-gray-500">{{ thumbnailProgress() }}%</p>
       </div>
-    </div>
-  </z-card>
+    </z-card>
 
-  <z-card class="w-80">
-    <div class="space-y-4">
-      <div class="flex justify-between items-center mb-2">
-        <p class="font-bold">Upload Metadata</p>
+    <z-card class="w-80">
+      <div class="space-y-4">
+        <div class="flex justify-between items-center mb-2">
+          <p class="font-bold">Upload Metadata</p>
+          @if (metadataFileOk()) {
+            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          }
+        </div>
+        <p class="text-sm text-gray-400">Upload the metadata file (.json)</p>
+        <button z-button zType="outline" (click)="metadataFileInput.click()">File Upload</button>
+        <input
+          type="file"
+          #metadataFileInput
+          hidden
+          (change)="metadataFileChange($event)"
+          accept=".json"
+        />
         @if (metadataFileOk()) {
-          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
+          <div class="flex gap-4 items-center">
+            <div class="border rounded-lg p-4 border-gray-300 flex">
+              <ng-icon name="lucideFile" class="!w-5 !h-5" />
+            </div>
+            <div>
+              <p class="break-all text-sm">{{ metadataFile().name }}</p>
+              <p class="text-sm text-gray-500">{{ formatBytes(metadataFile().size) }}</p>
+            </div>
+          </div>
         }
-      </div>
-      <p class="text-sm text-gray-400">Upload the metadata file (.json)</p>
-      <button z-button zType="outline" (click)="metadataFileInput.click()">File Upload</button>
-      <input
-        type="file"
-        #metadataFileInput
-        hidden
-        (change)="metadataFileChange($event)"
-        accept=".json"
-      />
-      @if (metadataFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="border rounded-lg p-4 border-gray-300 flex">
-            <ng-icon name="lucideFile" class="!w-5 !h-5" />
-          </div>
-          <div>
-            <p class="break-all text-sm">{{ metadataFile().name }}</p>
-            <p class="text-sm text-gray-500">{{ formatBytes(metadataFile().size) }}</p>
-          </div>
+          <z-progress-bar [progress]="metadataProgress()" class="h-3" />
+          <p class="text-sm text-gray-500">{{ metadataProgress() }}%</p>
         </div>
-      }
-      <div class="flex gap-4 items-center">
-        <z-progress-bar [progress]="metadataProgress()" class="h-3" />
-        <p class="text-sm text-gray-500">{{ metadataProgress() }}%</p>
       </div>
-    </div>
-  </z-card>
+    </z-card>
 
-  <z-card class="w-60">
-    <div class="space-y-4">
-      <div class="flex justify-between items-center mb-2">
-        <p class="font-bold">Order ID</p>
+    <z-card class="w-60">
+      <div class="space-y-4">
+        <div class="flex justify-between items-center mb-2">
+          <p class="font-bold">Order ID</p>
+        </div>
+        <p class="text-sm text-gray-400">
+          When you enter an order ID, the order status automatically changes to 'Completed'
+        </p>
+        <form [formGroup]="form">
+          <input z-input type="text" placeholder="Order ID" formControlName="orderId" />
+        </form>
       </div>
-      <p class="text-sm text-gray-400">
-        When you enter an order ID, the order status automatically changes to 'Completed'
-      </p>
-      <form [formGroup]="form">
-        <input z-input type="text" placeholder="Order ID" formControlName="orderId" />
-      </form>
-    </div>
-  </z-card>
+    </z-card>
+  </div>
 
   <div class="flex gap-2">
     <button z-button zType="outline" (click)="cancel()">Cancel</button>

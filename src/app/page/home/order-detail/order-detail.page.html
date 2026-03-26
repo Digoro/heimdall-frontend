@@ -1,10 +1,20 @@
-<div class="p-4 space-y-6">
-  <div class="flex justify-between">
+<div class="p-4">
+  <div class="flex justify-between mb-6">
     <ng-icon name="lucideArrowLeft" class="w-4 h-4 cursor-pointer" (click)="back()" />
-    <button z-button zType="outline" (click)="exportOrder()">Export Order</button>
+    <div class="flex gap-2">
+      <button z-button zType="outline" (click)="uploadProduct()">
+        <ng-icon name="lucideUpload" />
+        Upload Product
+      </button>
+      <button z-button zType="outline" (click)="exportOrder()">
+        <ng-icon name="lucideDownload" />
+        Export Order
+      </button>
+    </div>
   </div>
+
   @if (order().id) {
-    <div class="flex gap-4">
+    <div class="flex gap-4 flex-wrap mb-4">
       <z-card class="w-full md:w-94" zTitle="Order">
         <table z-table>
           <tr z-table-row>
@@ -82,7 +92,6 @@
                 <ng-icon
                   name="lucideSquarePen"
                   class="cursor-pointer"
-                  style="color: #464646"
                   (click)="editOrderStatus()"
                 />
               </div>
@@ -98,7 +107,6 @@
           </tr>
         </table>
       </z-card>
-
       @if (order().user) {
         <z-card class="w-full md:w-94" zTitle="User">
           <table z-table>
@@ -118,8 +126,7 @@
         </z-card>
       }
     </div>
-
-    <div class="flex gap-4 items-start">
+    <div class="flex gap-4 flex-wrap">
       @if (order().catalog) {
         <z-card class="w-full md:w-94" zTitle="Catalog">
           <table z-table>
@@ -185,7 +192,6 @@
           </table>
         </z-card>
       }
-
       @if (order().imaging) {
         <z-card class="w-full md:w-94" zTitle="Imaging">
           <table z-table>
