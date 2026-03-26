@@ -52,8 +52,9 @@
                   [routerLink]="item.page"
                   routerLinkActive="bg-primary text-black"
                   class="flex gap-1 items-center p-2.5 rounded-[10px]"
+                  [class]="sidebarCollapsed() ? 'justify-center' : ''"
                 >
-                  <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+                  <ng-icon name="{{ item.icon }}" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
                   @if (!sidebarCollapsed()) {
                     <span class="text-sm font-medium">{{ item.label }}</span>
                   }
@@ -63,8 +64,9 @@
                   [routerLink]="item.page"
                   routerLinkActive="bg-primary text-white"
                   class="flex gap-1 items-center p-2.5 rounded-[10px]"
+                  [class]="sidebarCollapsed() ? 'justify-center' : ''"
                 >
-                  <z-icon [zType]="item.icon" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+                  <ng-icon name="{{ item.icon }}" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
                   @if (!sidebarCollapsed()) {
                     <span class="text-sm font-medium">{{ item.label }}</span>
                   }
@@ -92,18 +94,22 @@
                 <div class="text-xs">{{ email() }}</div>
               </div>
 
-              <z-icon zType="chevrons-up-down" class="ml-auto" />
+              <ng-icon name="lucideChevronsUpDown" class="ml-auto" />
             }
           </div>
 
           <ng-template #userMenu>
             <div z-menu-content class="w-48">
               <button type="button" z-menu-item (click)="toggleTheme()">
-                <z-icon zType="dark-mode" class="mr-2" />
-                {{ themeMode() == 'dark' ? 'White Theme' : 'Dark Theme' }}
+                @if (themeMode() == 'dark') {
+                  <ng-icon name="lucideSun" class="mr-2" />
+                } @else {
+                  <ng-icon name="lucideMoon" class="mr-2" />
+                }
+                {{ themeMode() == 'dark' ? 'Light Mode' : 'Dark Mode' }}
               </button>
               <button type="button" z-menu-item (click)="logout()">
-                <z-icon zType="log-out" class="mr-2" />
+                <ng-icon name="lucideLogOut" class="mr-2" />
                 Logout
               </button>
             </div>

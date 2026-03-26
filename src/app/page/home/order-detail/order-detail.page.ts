@@ -3,46 +3,53 @@ import { OrderService } from "@/service/order.service";
 import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
-import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
-import { ZardSelectImports } from "@/shared/components/select";
+import { ZardSelectComponent, ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
 import { CommonModule, DatePipe, Location } from "@angular/common";
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, OnInit, signal, viewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { toast } from "ngx-sonner";
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideArchive, lucideArrowLeft, lucideSatellite, lucideSquarePen } from '@ng-icons/lucide';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
     ZardBadgeComponent,
-    ZardCardComponent
+    ZardCardComponent,
+    NgIcon
   ],
   providers: [
     OrderService,
   ],
   templateUrl: './order-detail.page.html',
+  viewProviders: [
+    provideIcons({
+      lucideSquarePen, lucideArchive, lucideSatellite, lucideArrowLeft
+    })
+  ]
 })
 export class OrderDetailPage implements OnInit {
+  statusSelector = viewChild<ZardSelectComponent>("statusSelector");
   order = signal({} as Order);
   orderStatusList = Object.values(OrderStatus);
   selectedStatusList = signal<OrderStatus[]>([]);
   form = new FormGroup({
     status: new FormControl(''),
   });
+  isStatusEdit = signal(false);
 
   constructor(
     private orderService: OrderService,
@@ -61,6 +68,8 @@ export class OrderDetailPage implements OnInit {
   changeStatus() {
     const status = OrderStatus[this.form.controls.status.value as keyof typeof OrderStatus];
     this.orderService.update(this.order().id, { status }).subscribe(resp => {
+      this.order.set(resp);
+      this.isStatusEdit.set(false);
       toast.success('Order updated successfully', {
         description: 'status has been successfully updated.',
       });
@@ -73,5 +82,12 @@ export class OrderDetailPage implements OnInit {
 
   exportOrder() {
     this.orderService.exportOrder(this.order());
+  }
+
+  editOrderStatus() {
+    this.isStatusEdit.set(!this.isStatusEdit());
+    setTimeout(() => {
+      this.statusSelector()?.toggle();
+    })
   }
 }

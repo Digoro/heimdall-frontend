@@ -23,7 +23,7 @@
 
   <div class="flex justify-end gap-2">
     <button z-button zType="outline" (click)="refresh()" [zLoading]="isLoading()">Refresh</button>
-    <button z-button (click)="openDialog()"><i z-icon zType="plus"></i>Create New Key</button>
+    <button z-button (click)="openDialog()"><ng-icon name="lucidePlus" />Create New Key</button>
   </div>
 
   <div class="rounded-md border h-fit">
@@ -52,12 +52,12 @@
             <td z-table-cell>
               @if (apiKey.status == 'Active') {
                 <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                  <z-icon zType="circle-check" />
+                  <ng-icon name="lucideKeyRound" />
                   {{ apiKey.status }}
                 </z-badge>
               } @else if (apiKey.status == 'Inactive') {
                 <z-badge zType="secondary">
-                  <z-icon zType="ban" />
+                  <ng-icon name="lucideBan" />
                   {{ apiKey.status }}
                 </z-badge>
               }
@@ -70,20 +70,20 @@
             }
             <td z-table-cell>
               <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
-                <i z-icon zType="ellipsis"></i>
+                <ng-icon name="lucideEllipsis" />
 
                 <ng-template #menu>
                   <div z-menu-content class="w-48">
                     @if (apiKey.status == 'Inactive') {
                       <button type="button" z-menu-item (click)="active(apiKey)">
-                        <i z-icon zType="circle-check"></i>
+                        <ng-icon name="lucideKeyRound" class="mr-2" />
                         Active
                       </button>
                       <z-divider zSpacing="sm" />
                     }
                     @if (apiKey.status == 'Active') {
                       <button type="button" z-menu-item (click)="inActive(apiKey)">
-                        <i z-icon zType="ban"></i>
+                        <ng-icon name="lucideBan" class="mr-2" />
                         Inactive
                       </button>
                       <z-divider zSpacing="sm" />
@@ -94,7 +94,7 @@
                       class="text-red-500 dark:text-red-300"
                       (click)="delete(apiKey)"
                     >
-                      <i z-icon zType="trash"></i>
+                      <ng-icon name="lucideTrash2" class="mr-2" />
                       Delete
                     </button>
                   </div>

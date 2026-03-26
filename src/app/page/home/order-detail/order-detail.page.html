@@ -1,6 +1,6 @@
 <div class="p-4 space-y-6">
   <div class="flex justify-between">
-    <z-icon zType="arrow-left" class="w-4 h-4 cursor-pointer" (click)="back()" />
+    <ng-icon name="lucideArrowLeft" class="w-4 h-4 cursor-pointer" (click)="back()" />
     <button z-button zType="outline" (click)="exportOrder()">Export Order</button>
   </div>
   @if (order().id) {
@@ -16,12 +16,12 @@
             <td z-table-cell>
               @if (order().type == 'ArchvingOrder') {
                 <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                  <z-icon zType="archive" />
+                  <ng-icon name="lucideArchive" />
                   Archving Order
                 </z-badge>
               } @else if (order().type == 'TaskingOrder') {
                 <z-badge class="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                  <z-icon zType="zap" />
+                  <ng-icon name="lucideSatellite" />
                   Tasking Order
                 </z-badge>
               }
@@ -30,17 +30,62 @@
           <tr z-table-row>
             <th z-table-head>Status</th>
             <td z-table-cell>
-              <form [formGroup]="form">
-                <z-select
-                  zPlaceholder="Select Status"
-                  formControlName="status"
-                  (zSelectionChange)="changeStatus()"
-                >
-                  @for (status of orderStatusList; track $index) {
-                    <z-select-item [zValue]="status">{{ status }}</z-select-item>
-                  }
-                </z-select>
-              </form>
+              <div class="flex items-center gap-1">
+                @if (!isStatusEdit()) {
+                  <div>
+                    @if (order().status == 'Pending') {
+                      <z-badge
+                        class="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    } @else if (order().status == 'Approved') {
+                      <z-badge
+                        class="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    } @else if (order().status == 'Rejected') {
+                      <z-badge
+                        class="bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    } @else if (order().status == 'Completed') {
+                      <z-badge
+                        class="bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    } @else if (order().status == 'Failed') {
+                      <z-badge
+                        class="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    } @else if (order().status == 'Canceled') {
+                      <z-badge
+                        class="bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400"
+                        >{{ order().status }}</z-badge
+                      >
+                    }
+                  </div>
+                } @else {
+                  <form [formGroup]="form">
+                    <z-select
+                      #statusSelector
+                      zPlaceholder="Select Status"
+                      formControlName="status"
+                      (zSelectionChange)="changeStatus()"
+                    >
+                      @for (status of orderStatusList; track $index) {
+                        <z-select-item [zValue]="status">{{ status }}</z-select-item>
+                      }
+                    </z-select>
+                  </form>
+                }
+                <ng-icon
+                  name="lucideSquarePen"
+                  class="cursor-pointer"
+                  style="color: #464646"
+                  (click)="editOrderStatus()"
+                />
+              </div>
             </td>
           </tr>
           <tr z-table-row>
@@ -146,29 +191,29 @@
           <table z-table>
             <tr z-table-row>
               <th z-table-head>Imaging Mode</th>
-              <td z-table-cell>{{ order().catalog.imagingMode }}</td>
+              <td z-table-cell>{{ order().imaging.imagingMode }}</td>
             </tr>
             <tr z-table-row>
               <th z-table-head>imaging Start At</th>
               <td z-table-cell>
-                {{ order().catalog.imagingStartAt | date: 'yyyy-MM-dd HH:mm:ss' }}
+                {{ order().imaging.imagingStartAt | date: 'yyyy-MM-dd HH:mm:ss' }}
               </td>
             </tr>
             <tr z-table-row>
               <th z-table-head>Imaging End At</th>
-              <td z-table-cell>{{ order().catalog.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td z-table-cell>{{ order().imaging.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             </tr>
             <tr z-table-row>
               <th z-table-head>Corner Coordinates</th>
               <td z-table-cell>
-                topLeft: {{ order().catalog.cornerCoordinates.topLeft.x }},
-                {{ order().catalog.cornerCoordinates.topLeft.y }} <br />
-                topRight: {{ order().catalog.cornerCoordinates.topRight.x }},
-                {{ order().catalog.cornerCoordinates.topRight.y }} <br />
-                bottomLeft: {{ order().catalog.cornerCoordinates.bottomLeft.x }},
-                {{ order().catalog.cornerCoordinates.bottomLeft.y }} <br />
-                bottomRight: {{ order().catalog.cornerCoordinates.bottomRight.x }},
-                {{ order().catalog.cornerCoordinates.bottomRight.y }}
+                topLeft: {{ order().imaging.cornerCoordinates.topLeft.x }},
+                {{ order().imaging.cornerCoordinates.topLeft.y }} <br />
+                topRight: {{ order().imaging.cornerCoordinates.topRight.x }},
+                {{ order().imaging.cornerCoordinates.topRight.y }} <br />
+                bottomLeft: {{ order().imaging.cornerCoordinates.bottomLeft.x }},
+                {{ order().imaging.cornerCoordinates.bottomLeft.y }} <br />
+                bottomRight: {{ order().imaging.cornerCoordinates.bottomRight.x }},
+                {{ order().imaging.cornerCoordinates.bottomRight.y }}
               </td>
             </tr>
           </table>

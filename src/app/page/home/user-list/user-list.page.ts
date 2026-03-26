@@ -7,7 +7,6 @@ import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardDividerComponent } from "@/shared/components/divider";
-import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardInputGroupComponent } from "@/shared/components/input-group";
 import { ZardMenuImports } from "@/shared/components/menu";
@@ -20,17 +19,18 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { toast } from "ngx-sonner";
 import { AddUserComponent } from "./add-user.component";
 import { EditUserComponent } from "./edit-user.component";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideBan, lucideCircleCheck, lucideEllipsis, lucidePlus, lucideSearch, lucideSquarePen, lucideTrash2, lucideUserRound, lucideUserRoundCog } from "@ng-icons/lucide";
 
 @Component({
   standalone: true,
   imports: [
+    NgIcon,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
@@ -44,6 +44,12 @@ import { EditUserComponent } from "./edit-user.component";
     AuthService
   ],
   templateUrl: './user-list.page.html',
+  viewProviders: [
+    provideIcons({
+      lucideSearch, lucidePlus, lucideUserRoundCog, lucideUserRound, lucideCircleCheck, lucideBan,
+      lucideEllipsis, lucideSquarePen, lucideTrash2
+    })
+  ]
 })
 export class UserListPage implements OnInit {
   fb = inject(FormBuilder);

@@ -3,7 +3,7 @@
     <z-input-group [zAddonBefore]="search">
       <input z-input placeholder="User email" formControlName="email" />
     </z-input-group>
-    <ng-template #search><z-icon zType="mail" /></ng-template>
+    <ng-template #search><ng-icon name="lucideMail" /></ng-template>
     <div class="flex w-200 gap-4">
       <z-select
         zPlaceholder="Select Type"
@@ -60,37 +60,64 @@
             <td z-table-cell>
               @if (order.type == 'ArchvingOrder') {
                 <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                  <z-icon zType="archive" />
+                  <ng-icon name="lucideArchive" />
                   Archving Order
                 </z-badge>
               } @else if (order.type == 'TaskingOrder') {
                 <z-badge class="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                  <z-icon zType="zap" />
+                  <ng-icon name="lucideSatellite" />
                   Tasking Order
                 </z-badge>
               }
             </td>
             <td z-table-cell>
-              <z-badge zType="secondary">{{ order.status }}</z-badge>
+              @if (order.status == 'Pending') {
+                <z-badge
+                  class="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400"
+                  >{{ order.status }}</z-badge
+                >
+              } @else if (order.status == 'Approved') {
+                <z-badge class="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400">{{
+                  order.status
+                }}</z-badge>
+              } @else if (order.status == 'Rejected') {
+                <z-badge
+                  class="bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400"
+                  >{{ order.status }}</z-badge
+                >
+              } @else if (order.status == 'Completed') {
+                <z-badge
+                  class="bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                  >{{ order.status }}</z-badge
+                >
+              } @else if (order.status == 'Failed') {
+                <z-badge class="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">{{
+                  order.status
+                }}</z-badge>
+              } @else if (order.status == 'Canceled') {
+                <z-badge class="bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400">{{
+                  order.status
+                }}</z-badge>
+              }
             </td>
             <td z-table-cell>{{ order.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>{{ order.updatedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>
               <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
-                <i z-icon zType="ellipsis"></i>
+                <ng-icon name="lucideEllipsis" />
 
                 <ng-template #menu>
                   <div z-menu-content class="w-48">
                     <button type="button" z-menu-item (click)="viewDetail(order)">
-                      <i z-icon zType="info"></i>
+                      <ng-icon name="lucideInfo" class="mr-2" />
                       View Detail
                     </button>
                     <button type="button" z-menu-item (click)="uploadProduct(order)">
-                      <i z-icon zType="chevron-up"></i>
+                      <ng-icon name="lucideFolderUp" class="mr-2" />
                       Upload Product
                     </button>
                     <button type="button" z-menu-item (click)="exportOrder(order)">
-                      <i z-icon zType="chevron-down"></i>
+                      <ng-icon name="lucideDownload" class="mr-2" />
                       Export Order
                     </button>
                   </div>

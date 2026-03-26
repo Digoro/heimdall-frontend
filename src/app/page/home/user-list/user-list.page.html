@@ -4,7 +4,7 @@
       <z-input-group [zAddonBefore]="search">
         <input z-input placeholder="Search..." formControlName="term" />
       </z-input-group>
-      <ng-template #search><z-icon zType="search" /></ng-template>
+      <ng-template #search><ng-icon name="lucideSearch" /></ng-template>
       <div class="flex w-100 gap-4">
         <z-select
           zPlaceholder="Select Roles"
@@ -20,7 +20,7 @@
       <button z-button (click)="searchUsers(1)" [zLoading]="isLoading()">Search</button>
     </form>
 
-    <button z-button (click)="openAddDialog()"><i z-icon zType="plus"></i>Add New User</button>
+    <button z-button (click)="openAddDialog()"><ng-icon name="lucidePlus" />Add New User</button>
   </div>
 
   <div class="rounded-md border h-fit">
@@ -57,12 +57,12 @@
             <td z-table-cell>
               @if (user.role == 'Admin') {
                 <z-badge zType="outline">
-                  <z-icon zType="user-plus" />
+                  <ng-icon name="lucideUserRoundCog" />
                   {{ user.role }}
                 </z-badge>
               } @else {
                 <z-badge zType="outline">
-                  <z-icon zType="user" />
+                  <ng-icon name="lucideUserRound" />
                   {{ user.role }}
                 </z-badge>
               }
@@ -71,34 +71,34 @@
             <td z-table-cell>
               @if (user.isApproved) {
                 <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                  <z-icon zType="circle-check" />
+                  <ng-icon name="lucideCircleCheck" class="!w-3.5 !h-3.5" />
                   Approved
                 </z-badge>
               } @else {
                 <z-badge class="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
-                  <z-icon zType="ban" />
+                  <ng-icon name="lucideBan" />
                   Disapproved
                 </z-badge>
               }
             </td>
             <td z-table-cell>
               <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
-                <i z-icon zType="ellipsis"></i>
+                <ng-icon name="lucideEllipsis" />
                 <ng-template #menu>
                   <div z-menu-content class="w-48">
                     @if (!user.isApproved) {
                       <button type="button" z-menu-item (click)="approval(user)">
-                        <i z-icon zType="circle-check"></i>
+                        <ng-icon name="lucideCircleCheck" class="mr-2" />
                         Approval
                       </button>
                     }
                     <button type="button" z-menu-item (click)="update(user)">
-                      <i z-icon zType="user"></i>
+                      <ng-icon name="lucideSquarePen" class="mr-2" />
                       Update
                     </button>
                     <z-divider zSpacing="sm" />
                     <button type="button" z-menu-item class="text-red-500" (click)="delete(user)">
-                      <i z-icon zType="trash"></i>
+                      <ng-icon name="lucideTrash2" class="mr-2" />
                       Delete
                     </button>
                   </div>

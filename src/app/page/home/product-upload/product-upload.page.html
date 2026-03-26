@@ -4,7 +4,7 @@
       <div class="flex justify-between items-center mb-2">
         <p class="font-bold">Upload SAR Image</p>
         @if (sarFileOk()) {
-          <z-icon zType="circle-check" class="text-green-500 w-5 h-5" />
+          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
         }
       </div>
       <p class="text-sm text-gray-400">Upload the original SAR Imagery file (.tif/.tiff)</p>
@@ -18,8 +18,8 @@
       />
       @if (sarFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="border rounded-lg p-4 border-gray-300">
-            <z-icon zType="file" class="w-7 h-5" />
+          <div class="flex border rounded-lg p-4 border-gray-300">
+            <ng-icon name="lucideFile" class="!w-5 !h-5" />
           </div>
           <div>
             <p class="break-all text-sm">{{ sarFile().name }}</p>
@@ -39,7 +39,7 @@
       <div class="flex justify-between items-center mb-2">
         <p class="font-bold">Upload Thumbnail</p>
         @if (thumbnailFileOk()) {
-          <z-icon zType="circle-check" class="text-green-500 w-5 h-5" />
+          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
         }
       </div>
       <p class="text-sm text-gray-400">Upload a preview thumbnail image (.png/.jpg/.jpeg)</p>
@@ -53,8 +53,8 @@
       />
       @if (thumbnailFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="border rounded-lg p-4 border-gray-300">
-            <z-icon zType="file" class="w-7 h-5" />
+          <div class="border rounded-lg p-4 border-gray-300 flex">
+            <ng-icon name="lucideFile" class="!w-5 !h-5" />
           </div>
           <div>
             <p class="break-all text-sm">{{ thumbnailFile().name }}</p>
@@ -74,7 +74,7 @@
       <div class="flex justify-between items-center mb-2">
         <p class="font-bold">Upload Metadata</p>
         @if (metadataFileOk()) {
-          <z-icon zType="circle-check" class="text-green-500 w-5 h-5" />
+          <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
         }
       </div>
       <p class="text-sm text-gray-400">Upload the metadata file (.json)</p>
@@ -88,8 +88,8 @@
       />
       @if (metadataFileOk()) {
         <div class="flex gap-4 items-center">
-          <div class="border rounded-lg p-4 border-gray-300">
-            <z-icon zType="file" class="w-7 h-5" />
+          <div class="border rounded-lg p-4 border-gray-300 flex">
+            <ng-icon name="lucideFile" class="!w-5 !h-5" />
           </div>
           <div>
             <p class="break-all text-sm">{{ metadataFile().name }}</p>

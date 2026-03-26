@@ -8,7 +8,6 @@ import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardDividerComponent } from "@/shared/components/divider";
-import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
@@ -19,29 +18,35 @@ import { Component, inject, OnInit, signal } from "@angular/core";
 import { toast } from "ngx-sonner";
 import { AddAPIKeyComponent } from "./add-api-key.component";
 import { NewAPIKeyComponent } from "./new-api-key.component";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideBan, lucideEllipsis, lucideKeyRound, lucidePlus, lucideTrash2 } from "@ng-icons/lucide";
 
 @Component({
   standalone: true,
   imports: [
     ZardCardComponent,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardBadgeComponent,
     ZardProgressBarComponent,
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardMenuImports,
     ZardDividerComponent,
-    ZardSelectImports
+    ZardSelectImports,
+    NgIcon
   ],
   providers: [
     APIService,
     AuthService
   ],
   templateUrl: './api-key-list.page.html',
+  viewProviders: [
+    provideIcons({
+      lucidePlus, lucideKeyRound, lucideBan, lucideEllipsis, lucideTrash2
+    })
+  ]
 })
 export class APIKeyPage implements OnInit {
   private alertDialogService = inject(ZardAlertDialogService);

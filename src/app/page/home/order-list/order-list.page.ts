@@ -5,7 +5,6 @@ import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
 import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardDialogService } from "@/shared/components/dialog";
-import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardInputGroupComponent } from "@/shared/components/input-group";
 import { ZardMenuImports } from "@/shared/components/menu";
@@ -16,17 +15,18 @@ import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideArchive, lucideDownload, lucideEllipsis, lucideFolderUp, lucideInfo, lucideMail, lucideSatellite } from "@ng-icons/lucide";
 
 @Component({
   standalone: true,
   imports: [
+    NgIcon,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
@@ -38,6 +38,12 @@ import { ActivatedRoute, Router } from "@angular/router";
     OrderService,
   ],
   templateUrl: './order-list.page.html',
+  viewProviders: [
+    provideIcons({
+      lucideMail, lucideArchive, lucideSatellite, lucideEllipsis, lucideInfo,
+      lucideFolderUp, lucideDownload
+    })
+  ]
 })
 export class OrderListPage implements OnInit {
   fb = inject(FormBuilder);

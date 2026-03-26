@@ -3,13 +3,15 @@ import { AuthService } from '@/service/auth.service';
 import { ThemeService } from '@/service/theme.service';
 import { ZardAvatarComponent } from '@/shared/components/avatar';
 import { ZardBreadcrumbImports } from '@/shared/components/breadcrumb/breadcrumb.imports';
-import { ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 import { ZardMenuImports } from '@/shared/components/menu';
 import { ZardToastComponent } from '@/shared/components/toast';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideBookOpen, lucideChevronsUpDown, lucideFolderUp, lucideKeyRound, lucideLogOut, lucideMoon, lucideShoppingCart, lucideSun, lucideUserRoundCog } from '@ng-icons/lucide';
 import { filter } from 'rxjs';
 
 interface Menu {
@@ -18,7 +20,7 @@ interface Menu {
 }
 
 interface MenuItem {
-  icon: ZardIcon;
+  icon: string;
   label: string;
   page: string;
 }
@@ -26,20 +28,27 @@ interface MenuItem {
 @Component({
   standalone: true,
   imports: [
+    CommonModule,
     LayoutImports,
     ZardMenuImports,
-    ZardIconComponent,
     ZardBreadcrumbImports,
     RouterOutlet,
     ZardToastComponent,
     RouterLinkWithHref,
     RouterLinkActive,
     RouterModule,
-    ZardAvatarComponent
+    ZardAvatarComponent,
+    NgIcon
   ],
   providers: [
   ],
   templateUrl: './home.page.html',
+  viewProviders: [
+    provideIcons({
+      lucideBookOpen, lucideFolderUp, lucideUserRoundCog, lucideKeyRound, lucideShoppingCart,
+      lucideChevronsUpDown, lucideSun, lucideMoon, lucideLogOut
+    })
+  ]
 })
 export class HomePage implements OnInit {
   readonly sidebarCollapsed = signal(false);
@@ -47,25 +56,25 @@ export class HomePage implements OnInit {
   menus: Menu[] = [
     {
       title: 'API', items: [
-        { icon: 'file-text', label: 'API Keys', page: 'apiKeys' },
-        { icon: 'book-open', label: 'API Documents', page: 'api-docs' }
+        { icon: 'lucideKeyRound', label: 'API Keys', page: 'apiKeys' },
+        { icon: 'lucideBookOpen', label: 'API Documents', page: 'api-docs' }
       ]
     }
   ];
   adminMenu: Menu[] = [
     {
       title: 'Order', items: [
-        { icon: 'inbox', label: 'Order Management', page: 'orders' }
+        { icon: 'lucideShoppingCart', label: 'Order Management', page: 'orders' }
       ]
     },
     {
       title: 'Catalog', items: [
-        { icon: 'folder-plus', label: 'Upload Product', page: 'upload-product' }
+        { icon: 'lucideFolderUp', label: 'Upload Product', page: 'upload-product' }
       ]
     },
     {
       title: 'User', items: [
-        { icon: 'users', label: 'User Management', page: 'users' }
+        { icon: 'lucideUserRoundCog', label: 'User Management', page: 'users' }
       ]
     }
   ]

@@ -3,7 +3,6 @@ import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardDividerComponent } from "@/shared/components/divider";
-import { ZardIconComponent } from "@/shared/components/icon";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
@@ -14,16 +13,17 @@ import { HttpEventType } from "@angular/common/http";
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideCircleCheck, lucideFile } from "@ng-icons/lucide";
 import { toast } from "ngx-sonner";
 
 @Component({
   standalone: true,
   imports: [
+    NgIcon,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardPaginationImports,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,
@@ -37,6 +37,11 @@ import { toast } from "ngx-sonner";
     ProductService
   ],
   templateUrl: './product-upload.page.html',
+  viewProviders: [
+    provideIcons({
+      lucideCircleCheck, lucideFile
+    })
+  ]
 })
 export class ProductUploadPage implements OnInit {
   sarProgress = signal(0);
