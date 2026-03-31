@@ -18,8 +18,8 @@ export class OrderService {
     return this.http.post<Pagination<Order>>(`/api/orders/admin/search`, dto);
   }
 
-  update(id: number, dto: OrderUpdateDto): Observable<Order> {
-    return this.http.put<Order>(`/api/orders/admin/${id}`, dto);
+  updateStatus(id: number, dto: OrderUpdateDto): Observable<Order> {
+    return this.http.put<Order>(`/api/orders/admin/${id}/status`, dto);
   }
 
   exportOrder(order: Order) {
@@ -28,25 +28,23 @@ export class OrderService {
       const archvingOrder: ArchvingOrderExportJson = {
         orderId: order.id,
         catalogId: order.catalog.id,
-        productLevel: order.productLevel,
+        productType: order.productType,
         imagingMode: catalog.imagingMode,
         imagingStartAt: catalog.imagingStartAt.toString(),
         imagingEndAt: catalog.imagingEndAt.toString(),
-        cornerCoordinates: catalog.cornerCoordinates,
+        geometry: JSON.stringify(catalog.geometry),
         target: catalog.target,
         polarization: catalog.polarization,
         resolution: catalog.resolution,
         projection: catalog.projection,
         geoTransform: catalog.geoTransform,
-        nadirAngle: catalog.nadirAngle,
         offNadirAngle: catalog.offNadirAngle,
-        bandColorInterp: catalog.bandColorInterp
       }
       const blob = new Blob([JSON.stringify(archvingOrder, null, 2)], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_ArchvingOrder_${order.id}_${order.productLevel}_${new Date().toISOString()}.json`;
+      a.download = `OMS_ArchvingOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }
@@ -55,17 +53,17 @@ export class OrderService {
       const taskingOrder: TaskingOrderExportJson = {
         orderId: order.id,
         geometry: {},
-        productLevel: order.productLevel,
+        productLevel: order.productType,
         imagingMode: imaging.imagingMode,
-        windowOpen: imaging.imagingStartAt.toString(),
-        windowClose: imaging.imagingEndAt.toString(),
+        windowOpen: imaging.windowOpen.toString(),
+        windowClose: imaging.windowClose.toString(),
         collectionConstraints: {}
       }
       const blob = new Blob([JSON.stringify(taskingOrder, null, 2)], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_TaskingOrder_${order.id}_${order.productLevel}_${new Date().toISOString()}.json`;
+      a.download = `OMS_TaskingOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }

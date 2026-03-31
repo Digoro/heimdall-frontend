@@ -1,9 +1,10 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+COPY .npm /root/.npm
+RUN npm ci --offline
 COPY . .
-RUN npm run build -- --configuration production
+RUN npm run production
 
 FROM nginx:alpine
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html

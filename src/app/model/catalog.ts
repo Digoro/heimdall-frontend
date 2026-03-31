@@ -1,3 +1,4 @@
+import { Geometry } from "./imaging";
 import { Product } from "./product";
 import { User } from "./user";
 
@@ -7,20 +8,13 @@ export class Catalog {
     public imagingMode: ImagingMode,
     public imagingStartAt: Date,
     public imagingEndAt: Date,
-    public cornerCoordinates: {
-      topLeft: { x: number; y: number },
-      topRight: { x: number; y: number },
-      bottomLeft: { x: number; y: number },
-      bottomRight: { x: number; y: number },
-    },
+    public geometry: Geometry,
     public target: string,
     public polarization: string,
     public resolution: string,
     public projection: string,
     public geoTransform: string,
-    public nadirAngle: number,
     public offNadirAngle: number,
-    public bandColorInterp: string,
     public user: User,
     public product: Product,
     public createdAt: Date,

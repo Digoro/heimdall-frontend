@@ -1,12 +1,13 @@
 import { Catalog } from "./catalog";
 import { Imaging } from "./imaging";
+import { ProductType } from "./product";
 import { User } from "./user";
 
 export class Order {
   constructor(
     public id: number,
     public type: OrderType,
-    public productLevel: ProductLevel,
+    public productType: ProductType,
     public status: OrderStatus,
     public downloadUrl: string,
     public exportedAt: Date,
@@ -30,18 +31,12 @@ export enum OrderType {
 }
 
 export enum OrderStatus {
-  Pending = "Pending",
-  Approved = "Approved",
-  Rejected = "Rejected",
-  Completed = "Completed",
-  Failed = "Failed",
-  Canceled = "Canceled"
-}
-
-export enum ProductLevel {
-  L1A = "L1A",
-  L1C = "L1C",
-  L1D = "L1D"
+  PENDING = "Pending",
+  APPROVED = "Approved",
+  REJECTED = "Rejected",
+  COMPLETED = "Completed",
+  FAILED = "Failed",
+  CANCELED = "Canceled"
 }
 
 export class OrderSearchDto {
@@ -63,30 +58,23 @@ export class OrderUpdateDto {
 export interface ArchvingOrderExportJson {
   orderId: number;
   catalogId: number;
-  productLevel: ProductLevel;
+  productType: ProductType;
   imagingMode: string;
   imagingStartAt: string;
   imagingEndAt: string;
-  cornerCoordinates: {
-    topLeft: { x: number; y: number },
-    topRight: { x: number; y: number },
-    bottomLeft: { x: number; y: number },
-    bottomRight: { x: number; y: number },
-  };
+  geometry: string;
   target: string;
   polarization: string;
   resolution: string;
   projection: string;
   geoTransform: string;
-  nadirAngle: number;
   offNadirAngle: number;
-  bandColorInterp: string;
 }
 
 export interface TaskingOrderExportJson {
   orderId: number;
   geometry: {};
-  productLevel: ProductLevel;
+  productLevel: ProductType;
   imagingMode: string;
   windowOpen: string;
   windowClose: string;

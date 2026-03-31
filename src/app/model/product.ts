@@ -3,7 +3,7 @@ import { Catalog } from "./catalog";
 export class Product {
   constructor(
     public id: number,
-    public productLevel: ProductLevel,
+    public productType: ProductType,
     public thumbnail: string,
     public filePath: string,
     public fileFormat: string,
@@ -13,8 +13,8 @@ export class Product {
   ) { }
 }
 
-export enum ProductLevel {
-  L1A = "L1A",
-  L1C = "L1C",
-  L1D = "L1D"
+export enum ProductType {
+  SLC = "SLC",
+  GEC = "GEC",
+  GEO = "GEO"
 }

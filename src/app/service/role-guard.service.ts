@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -23,12 +22,9 @@ export class RoleGuard implements CanActivate {
     }
 
     checkRole(childRoute: ActivatedRouteSnapshot) {
-        return this.authService.getCurrentUserFromServer().pipe(
-            map(user => {
-                const isPermitted = !!(childRoute.data?.['roles'] as string[]).find(role => role === user.role);
-                if (!isPermitted) this.router.navigate(['/']);
-                return isPermitted;
-            })
-        )
+        const user = this.authService.currentUser();
+        const isPermitted = !!(childRoute.data?.['roles'] as string[]).find(role => role === user?.role);
+        if (!isPermitted) this.router.navigate(['/']);
+        return isPermitted;
     }
 }

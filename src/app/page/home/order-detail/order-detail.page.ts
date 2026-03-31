@@ -68,8 +68,8 @@ export class OrderDetailPage implements OnInit {
   }
 
   changeStatus() {
-    const status = OrderStatus[this.form.controls.status.value as keyof typeof OrderStatus];
-    this.orderService.update(this.order().id, { status }).subscribe(resp => {
+    const status = this.form.controls.status.value as OrderStatus;
+    this.orderService.updateStatus(this.order().id, { status }).subscribe(resp => {
       this.order.set(resp);
       this.isStatusEdit.set(false);
       toast.success('Order updated successfully', {

@@ -28,7 +28,6 @@ import { Router } from '@angular/router';
     UserService
   ],
   templateUrl: './signup.page.html',
-  styleUrls: ['./signup.page.scss'],
 })
 export class SignupPage {
   isLoading = signal(false);

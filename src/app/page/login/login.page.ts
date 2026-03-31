@@ -22,10 +22,8 @@ import { Router } from '@angular/router';
     ZardFormControlComponent,
   ],
   providers: [
-    AuthService
   ],
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
   isLoading = signal(false);

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { Role } from './model/user';
 import { authGuard } from './service/auth-guard.service';
-import { notAuthGuard } from './service/not-auth-guard.service';
 import { RoleGuard } from './service/role-guard.service';
+import { notAuthGuard } from './service/not-auth-guard.service';
 
 export const routes: Routes = [
     { path: 'login', canActivate: [notAuthGuard], loadComponent: () => import('./page/login/login.page').then(m => m.LoginPage) },

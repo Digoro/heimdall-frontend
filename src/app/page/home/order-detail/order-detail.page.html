@@ -99,7 +99,7 @@
           </tr>
           <tr z-table-row>
             <th z-table-head>ProductLevel</th>
-            <td z-table-cell>{{ order().productLevel }}</td>
+            <td z-table-cell>{{ order().productType }}</td>
           </tr>
           <tr z-table-row>
             <th z-table-head>Created</th>
@@ -148,19 +148,10 @@
               <th z-table-head>Imaging End At</th>
               <td z-table-cell>{{ order().catalog.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             </tr>
-            <tr z-table-row>
+            <!-- <tr z-table-row>
               <th z-table-head>Corner Coordinates</th>
-              <td z-table-cell>
-                topLeft: {{ order().catalog.cornerCoordinates.topLeft.x }},
-                {{ order().catalog.cornerCoordinates.topLeft.y }} <br />
-                topRight: {{ order().catalog.cornerCoordinates.topRight.x }},
-                {{ order().catalog.cornerCoordinates.topRight.y }} <br />
-                bottomLeft: {{ order().catalog.cornerCoordinates.bottomLeft.x }},
-                {{ order().catalog.cornerCoordinates.bottomLeft.y }} <br />
-                bottomRight: {{ order().catalog.cornerCoordinates.bottomRight.x }},
-                {{ order().catalog.cornerCoordinates.bottomRight.y }}
-              </td>
-            </tr>
+              <td z-table-cell>{{ order().catalog?.geometry?.type }}</td>
+            </tr> -->
             <tr z-table-row>
               <th z-table-head>Target</th>
               <td z-table-cell>{{ order().catalog.target }}</td>
@@ -178,16 +169,8 @@
               <td z-table-cell>{{ order().catalog.geoTransform }}</td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>NadirAngle</th>
-              <td z-table-cell>{{ order().catalog.nadirAngle }}</td>
-            </tr>
-            <tr z-table-row>
               <th z-table-head>OffNadirAngle</th>
               <td z-table-cell>{{ order().catalog.offNadirAngle }}</td>
-            </tr>
-            <tr z-table-row>
-              <th z-table-head>Band Color Interp</th>
-              <td z-table-cell>{{ order().catalog.bandColorInterp }}</td>
             </tr>
           </table>
         </z-card>
@@ -195,32 +178,63 @@
       @if (order().imaging) {
         <z-card class="w-full md:w-94" zTitle="Imaging">
           <table z-table>
+            <!-- <tr z-table-row>
+              <th z-table-head>Corner Coordinates</th>
+              <td z-table-cell>{{ order().imaging?.geometry?.type }}</td>
+            </tr> -->
+            @if (!!order().imaging.name) {
+              <tr z-table-row>
+                <th z-table-head>Name</th>
+                <td z-table-cell>{{ order().imaging.name }}</td>
+              </tr>
+            }
+            @if (!!order().imaging.description) {
+              <tr z-table-row>
+                <th z-table-head>Description</th>
+                <td z-table-cell>{{ order().imaging.description }}</td>
+              </tr>
+            }
+            <tr z-table-row>
+              <th z-table-head>Priority</th>
+              <td z-table-cell>{{ order().imaging.priority }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>imaging Start At</th>
+              <td z-table-cell>
+                {{ order().imaging.windowOpen | date: 'yyyy-MM-dd HH:mm:ss' }}
+              </td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Imaging End At</th>
+              <td z-table-cell>{{ order().imaging.windowClose | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            </tr>
             <tr z-table-row>
               <th z-table-head>Imaging Mode</th>
               <td z-table-cell>{{ order().imaging.imagingMode }}</td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>imaging Start At</th>
-              <td z-table-cell>
-                {{ order().imaging.imagingStartAt | date: 'yyyy-MM-dd HH:mm:ss' }}
-              </td>
+              <th z-table-head>Polarization</th>
+              <td z-table-cell>{{ order().imaging.polarization }}</td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>Imaging End At</th>
-              <td z-table-cell>{{ order().imaging.imagingEndAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+              <th z-table-head>Resolution</th>
+              <td z-table-cell>{{ order().imaging.resolution }}</td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>Corner Coordinates</th>
-              <td z-table-cell>
-                topLeft: {{ order().imaging.cornerCoordinates.topLeft.x }},
-                {{ order().imaging.cornerCoordinates.topLeft.y }} <br />
-                topRight: {{ order().imaging.cornerCoordinates.topRight.x }},
-                {{ order().imaging.cornerCoordinates.topRight.y }} <br />
-                bottomLeft: {{ order().imaging.cornerCoordinates.bottomLeft.x }},
-                {{ order().imaging.cornerCoordinates.bottomLeft.y }} <br />
-                bottomRight: {{ order().imaging.cornerCoordinates.bottomRight.x }},
-                {{ order().imaging.cornerCoordinates.bottomRight.y }}
-              </td>
+              <th z-table-head>Min Incidence Angle</th>
+              <td z-table-cell>{{ order().imaging.minIncidenceAngle }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Max Incidence Angle</th>
+              <td z-table-cell>{{ order().imaging.maxIncidenceAngle }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Look Side</th>
+              <td z-table-cell>{{ order().imaging.lookSide }}</td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Orbit Direction</th>
+              <td z-table-cell>{{ order().imaging.orbitDirection }}</td>
             </tr>
           </table>
         </z-card>

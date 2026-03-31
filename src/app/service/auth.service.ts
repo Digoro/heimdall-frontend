@@ -1,60 +1,47 @@
 import { User } from '@/model/user';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { CookieService } from 'ngx-cookie-service';
-import { Observable, of, tap } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly OMS_ACCESS_TOKEN = 'oms_access_token';
+  currentUser = signal<User | null>(null);
 
   constructor(
     private http: HttpClient,
-    private jwtHelper: JwtHelperService,
-    private cookieService: CookieService
+    private router: Router
   ) { }
 
   login(email: string, password: string) {
-    return this.http.post<{ accessToken: string }>('/auth/login', { email, password })
+    return this.http.post<{ user: User }>('/auth/login', { email, password })
       .pipe(
-        tap(res => {
-          this.setToken(res.accessToken);
+        tap(resp => {
+          this.currentUser.set(resp.user);
         })
       )
   }
 
-  getCurrentUser(): Observable<User | null> {
-    const user = this.jwtHelper.decodeToken(this.token) as User;
-    if (!user) return of(null);
-    return of(user);
-  }
-
-  getCurrentUserFromServer(): Observable<User> {
-    return this.http.get<User>('/auth/user');
-  }
-
-  setToken(token: string) {
-    this.removeToken();
-    const now = new Date()
-    now.setHours(now.getHours() + 30);
-    this.cookieService.set(this.OMS_ACCESS_TOKEN, token, { expires: now });
-  }
-
-  removeToken(): void {
-    this.cookieService.delete(this.OMS_ACCESS_TOKEN)
+  refresh() {
+    return this.http.post('/auth/refresh', {});
   }
 
   logout() {
-    this.cookieService.delete(this.OMS_ACCESS_TOKEN);
+    return this.http.post('/auth/logout', {}).subscribe(resp => {
+      this.currentUser.set(null);
+      this.router.navigate(['/login']);
+    })
   }
 
-  get token() {
-    return this.cookieService.get(this.OMS_ACCESS_TOKEN);
-  }
-
-  isAuthenticated(): boolean {
-    const token = this.token;
-    return token ? !this.jwtHelper.isTokenExpired(token) : false;
+  checkAuth() {
+    return this.http.get<User>('/auth/me').pipe(
+      tap((user) => {
+        this.currentUser.set(user);
+      }),
+      catchError(() => {
+        this.currentUser.set(null);
+        return of(null);
+      })
+    )
   }
 }

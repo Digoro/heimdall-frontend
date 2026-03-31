@@ -102,15 +102,15 @@ export class HomePage implements OnInit {
         this.pageTitle.set(title);
         this.titleService.setTitle(`OMS - ${title}`);
       });
-    this.authService.getCurrentUser().subscribe(resp => {
-      if (resp) {
-        this.name.set(resp.name);
-        this.email.set(resp.email);
-        if (resp.role == Role.ADMIN) {
-          this.menus = this.menus.concat(this.adminMenu);
-        }
+
+    const user = this.authService.currentUser();
+    if (user) {
+      this.name.set(user.name);
+      this.email.set(user.email);
+      if (user.role == Role.ADMIN) {
+        this.menus = this.menus.concat(this.adminMenu);
       }
-    })
+    }
 
     this.themeMode.set(this.themeService.themeMode);
     this.themeService.themeChanged.subscribe(mode => {
@@ -124,7 +124,6 @@ export class HomePage implements OnInit {
 
   logout() {
     this.authService.logout();
-    location.reload();
   }
 
   goTo(page: string) {
