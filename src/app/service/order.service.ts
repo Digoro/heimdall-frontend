@@ -1,4 +1,4 @@
-import { ArchvingOrderExportJson, Order, OrderSearchDto, OrderType, OrderUpdateDto, TaskingOrderExportJson } from '@/model/order';
+import { ArchvingOrderExportJson as ArchiveOrderExportJson, Order, OrderSearchDto, OrderType, OrderUpdateDto, TaskOrderExportJson } from '@/model/order';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -23,47 +23,33 @@ export class OrderService {
   }
 
   exportOrder(order: Order) {
-    if (order.type == OrderType.ARCHVING_ORDER) {
-      const catalog = order.catalog;
-      const archvingOrder: ArchvingOrderExportJson = {
+    if (order.type == OrderType.ARCHIVE) {
+      const item = order.item;
+      const archiveOrder: ArchiveOrderExportJson = {
         orderId: order.id,
-        catalogId: order.catalog.id,
         productType: order.productType,
-        imagingMode: catalog.imagingMode,
-        imagingStartAt: catalog.imagingStartAt.toString(),
-        imagingEndAt: catalog.imagingEndAt.toString(),
-        geometry: JSON.stringify(catalog.geometry),
-        target: catalog.target,
-        polarization: catalog.polarization,
-        resolution: catalog.resolution,
-        projection: catalog.projection,
-        geoTransform: catalog.geoTransform,
-        offNadirAngle: catalog.offNadirAngle,
-      }
-      const blob = new Blob([JSON.stringify(archvingOrder, null, 2)], { type: 'application/json' });
+        itemId: item.itemId
+      };
+      const blob = new Blob([JSON.stringify(archiveOrder, null, 2)], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_ArchvingOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
+      a.download = `OMS_ArchiveOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }
-    else if (order.type == OrderType.TASKING_ORDER) {
+    else if (order.type == OrderType.TASK) {
       const imaging = order.imaging;
-      const taskingOrder: TaskingOrderExportJson = {
+      const taskOrder: TaskOrderExportJson = {
         orderId: order.id,
-        geometry: {},
-        productLevel: order.productType,
-        imagingMode: imaging.imagingMode,
-        windowOpen: imaging.windowOpen.toString(),
-        windowClose: imaging.windowClose.toString(),
-        collectionConstraints: {}
-      }
-      const blob = new Blob([JSON.stringify(taskingOrder, null, 2)], { type: 'application/json' });
+        productType: order.productType,
+        imaging: imaging
+      };
+      const blob = new Blob([JSON.stringify(taskOrder, null, 2)], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_TaskingOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
+      a.download = `OMS_TaskOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }

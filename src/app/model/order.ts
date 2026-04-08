@@ -1,4 +1,4 @@
-import { Catalog } from "./catalog";
+import { CatalogItem } from "./collection";
 import { Imaging } from "./imaging";
 import { ProductType } from "./product";
 import { User } from "./user";
@@ -10,15 +10,22 @@ export class Order {
     public productType: ProductType,
     public status: OrderStatus,
     public downloadUrl: string,
-    public exportedAt: Date,
+    public receivedAt: Date,
+    public estimatingAt: Date,
+    public rejectedByAdminAt: Date,
     public pendingAt: Date,
+    public rejectedByUserAt: Date,
     public approvedAt: Date,
-    public rejectedAt: Date,
-    public completedAt: Date,
+    public scheduledAt: Date,
+    public collectingAt: Date,
+    public collectedAt: Date,
+    public processingAt: Date,
+    public qaAt: Date,
+    public deliveredAt: Date,
     public failedAt: Date,
     public canceledAt: Date,
     public user: User,
-    public catalog: Catalog,
+    public item: CatalogItem,
     public imaging: Imaging,
     public createdAt: Date,
     public updatedAt: Date
@@ -26,15 +33,23 @@ export class Order {
 }
 
 export enum OrderType {
-  ARCHVING_ORDER = "ArchvingOrder",
-  TASKING_ORDER = "TaskingOrder"
+  ARCHIVE = "Archive",
+  TASK = "Task"
 }
 
 export enum OrderStatus {
+  RECEIVED = "Received",
+  ESTIMATING = "Estimating",
+  REJECTED_BY_ADMIN = "Rejected by admin",
   PENDING = "Pending",
+  REJECTED_BY_USER = "Rejected by user",
   APPROVED = "Approved",
-  REJECTED = "Rejected",
-  COMPLETED = "Completed",
+  SCHEDULED = "Scheduled",
+  COLLECTING = "Collecting",
+  COLLECTED = "Collected",
+  PROCESSING = "Processing",
+  QA = "QA",
+  DELIVERED = "Delivered",
   FAILED = "Failed",
   CANCELED = "Canceled"
 }
@@ -57,26 +72,12 @@ export class OrderUpdateDto {
 
 export interface ArchvingOrderExportJson {
   orderId: number;
-  catalogId: number;
   productType: ProductType;
-  imagingMode: string;
-  imagingStartAt: string;
-  imagingEndAt: string;
-  geometry: string;
-  target: string;
-  polarization: string;
-  resolution: string;
-  projection: string;
-  geoTransform: string;
-  offNadirAngle: number;
+  itemId: string;
 }
 
-export interface TaskingOrderExportJson {
+export interface TaskOrderExportJson {
   orderId: number;
-  geometry: {};
-  productLevel: ProductType;
-  imagingMode: string;
-  windowOpen: string;
-  windowClose: string;
-  collectionConstraints: {};
+  productType: ProductType;
+  imaging: Imaging
 }

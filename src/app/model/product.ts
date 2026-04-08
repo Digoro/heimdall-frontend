@@ -1,4 +1,4 @@
-import { Catalog } from "./catalog";
+import { CatalogItem } from "./collection";
 
 export class Product {
   constructor(
@@ -7,7 +7,7 @@ export class Product {
     public thumbnail: string,
     public filePath: string,
     public fileFormat: string,
-    public catalog: Catalog,
+    public item: CatalogItem,
     public createdAt: Date,
     public updatedAt: Date,
   ) { }
