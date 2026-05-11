@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { toast } from "ngx-sonner";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideArchive, lucideArrowLeft, lucideDownload, lucideSatellite, lucideSquarePen, lucideUpload } from '@ng-icons/lucide';
+import { OrderStatusComponent } from "@/shared/components/order-status/order-status.component";
 
 @Component({
   standalone: true,
@@ -29,7 +30,8 @@ import { lucideArchive, lucideArrowLeft, lucideDownload, lucideSatellite, lucide
     ZardSelectImports,
     ZardBadgeComponent,
     ZardCardComponent,
-    NgIcon
+    NgIcon,
+    OrderStatusComponent
   ],
   providers: [
     OrderService,

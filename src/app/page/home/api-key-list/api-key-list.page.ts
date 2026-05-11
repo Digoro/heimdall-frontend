@@ -39,7 +39,6 @@ import { lucideBan, lucideEllipsis, lucideKeyRound, lucidePlus, lucideTrash2 } f
   ],
   providers: [
     APIService,
-    AuthService
   ],
   templateUrl: './api-key-list.page.html',
   viewProviders: [
@@ -72,8 +71,8 @@ export class APIKeyPage implements OnInit {
   isLoading = signal(false);
 
   constructor(
-    public apiService: APIService,
-    public authService: AuthService
+    private apiService: APIService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -161,6 +160,7 @@ export class APIKeyPage implements OnInit {
   }
 
   getAPIKeyUsage() {
+    this.authService.checkAuth();
     const user = this.authService.currentUser();
     if (user) {
       this.dailyUsage.set(user.dailyUsage);

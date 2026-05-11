@@ -8,6 +8,7 @@ import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardInputGroupComponent } from "@/shared/components/input-group";
 import { ZardMenuImports } from "@/shared/components/menu";
+import { OrderStatusComponent } from "@/shared/components/order-status/order-status.component";
 import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
@@ -33,6 +34,7 @@ import { lucideArchive, lucideDownload, lucideEllipsis, lucideInfo, lucideMail, 
     ZardInputDirective,
     ZardInputGroupComponent,
     ZardBadgeComponent,
+    OrderStatusComponent
   ],
   providers: [
     OrderService,

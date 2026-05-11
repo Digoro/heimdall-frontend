@@ -40,18 +40,16 @@ export enum OrderType {
 export enum OrderStatus {
   RECEIVED = "Received",
   ESTIMATING = "Estimating",
-  REJECTED_BY_ADMIN = "Rejected by admin",
+  REJECTED = "Rejected",
   PENDING = "Pending",
-  REJECTED_BY_USER = "Rejected by user",
+  CANCELED = "Canceled",
   APPROVED = "Approved",
   SCHEDULED = "Scheduled",
   COLLECTING = "Collecting",
-  COLLECTED = "Collected",
   PROCESSING = "Processing",
+  FAILED = "Failed",
   QA = "QA",
   DELIVERED = "Delivered",
-  FAILED = "Failed",
-  CANCELED = "Canceled"
 }
 
 export class OrderSearchDto {
