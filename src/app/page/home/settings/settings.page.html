@@ -1,0 +1,34 @@
+<div class="p-4">
+  <div class="flex gap-4 flex-wrap mb-4">
+    <z-card class="w-full md:w-94" zTitle="Webhook">
+      <form [formGroup]="webhookForm" class="space-y-4 sm:space-y-6">
+        <table z-table>
+          <tr z-table-row>
+            <th z-table-head>Webhook URL</th>
+            <td z-table-cell>
+              <input z-input type="text" formControlName="url" class="w-full" />
+            </td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>Content type</th>
+            <td z-table-cell>application/json</td>
+          </tr>
+          <tr z-table-row>
+            <th z-table-head>Secret</th>
+            <td z-table-cell>
+              @if (isEditWebhookSecret()) {
+                <button z-button zType="outline" (click)="setEditWebhookSecret()">Edit</button>
+              } @else {
+                <input z-input type="text" formControlName="secret" class="w-full" />
+              }
+            </td>
+          </tr>
+        </table>
+        <div class="flex justify-end gap-2">
+          <button z-button zType="destructive" (click)="deleteWebhook()">Delete</button>
+          <button z-button (click)="saveWebhook()">Save</button>
+        </div>
+      </form>
+    </z-card>
+  </div>
+</div>

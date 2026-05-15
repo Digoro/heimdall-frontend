@@ -11,7 +11,7 @@ import { Component, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBookOpen, lucideChevronsUpDown, lucideFolderUp, lucideKeyRound, lucideLogOut, lucideMoon, lucideShoppingCart, lucideSun, lucideUserRoundCog } from '@ng-icons/lucide';
+import { lucideBookOpen, lucideChevronsUpDown, lucideFolderUp, lucideKeyRound, lucideLogOut, lucideMoon, lucideSettings, lucideShoppingCart, lucideSun, lucideUserRoundCog } from '@ng-icons/lucide';
 import { filter } from 'rxjs';
 
 interface Menu {
@@ -46,7 +46,7 @@ interface MenuItem {
   viewProviders: [
     provideIcons({
       lucideBookOpen, lucideFolderUp, lucideUserRoundCog, lucideKeyRound, lucideShoppingCart,
-      lucideChevronsUpDown, lucideSun, lucideMoon, lucideLogOut
+      lucideChevronsUpDown, lucideSun, lucideMoon, lucideLogOut, lucideSettings
     })
   ]
 })

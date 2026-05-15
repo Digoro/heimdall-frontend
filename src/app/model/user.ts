@@ -13,7 +13,9 @@ export class User {
     public monthlyLimit: number,
     public isApproved: boolean,
     public createdAt: Date,
-    public updatedAt: Date
+    public updatedAt: Date,
+    public webhookUrl?: string,
+    public webhookSecret?: string,
   ) { }
 }
 

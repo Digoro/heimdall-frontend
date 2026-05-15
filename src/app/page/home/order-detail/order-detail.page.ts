@@ -24,7 +24,6 @@ import { OrderStatusComponent } from "@/shared/components/order-status/order-sta
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
-    ZardButtonComponent,
     ZardMenuImports,
     ReactiveFormsModule,
     ZardSelectImports,

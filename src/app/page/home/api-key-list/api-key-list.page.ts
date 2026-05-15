@@ -160,25 +160,26 @@ export class APIKeyPage implements OnInit {
   }
 
   getAPIKeyUsage() {
-    this.authService.checkAuth();
-    const user = this.authService.currentUser();
-    if (user) {
-      this.dailyUsage.set(user.dailyUsage);
-      this.dailyLimit.set(user.dailyLimit);
-      if (user.dailyLimit <= 0) {
-        this.dailyStat.set(0);
-      } else {
-        this.dailyStat.set(Math.round(user.dailyUsage / user.dailyLimit * 100));
-      }
+    this.authService.checkAuth().subscribe(() => {
+      const user = this.authService.currentUser();
+      if (user) {
+        this.dailyUsage.set(user.dailyUsage);
+        this.dailyLimit.set(user.dailyLimit);
+        if (user.dailyLimit <= 0) {
+          this.dailyStat.set(0);
+        } else {
+          this.dailyStat.set(Math.round(user.dailyUsage / user.dailyLimit * 100));
+        }
 
-      this.monthlyUsage.set(user.monthlyUsage);
-      this.monthlyLimit.set(user.monthlyLimit);
-      if (user.monthlyLimit <= 0) {
-        this.monthlyStat.set(0)
-      } else {
-        this.monthlyStat.set(Math.round(user.monthlyUsage / user.monthlyLimit * 100));
+        this.monthlyUsage.set(user.monthlyUsage);
+        this.monthlyLimit.set(user.monthlyLimit);
+        if (user.monthlyLimit <= 0) {
+          this.monthlyStat.set(0)
+        } else {
+          this.monthlyStat.set(Math.round(user.monthlyUsage / user.monthlyLimit * 100));
+        }
       }
-    }
+    })
   }
 
   refresh() {
