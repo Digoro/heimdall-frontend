@@ -75,10 +75,12 @@ export class OrderSearchDto {
   ) { }
 }
 
-export class OrderUpdateDto {
+export class OrderStatusUpdateDto {
   constructor(
     public status: OrderStatus,
-    public reason?: string
+    public reason?: string,
+    public estimatedCollectionDate?: Date,
+    public estimatedDeliveryDate?: Date,
   ) { }
 }
 

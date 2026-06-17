@@ -1,4 +1,4 @@
-import { ArchvingOrderExportJson as ArchiveOrderExportJson, Order, OrderSearchDto, OrderType, OrderUpdateDto, TaskOrderExportJson } from '@/model/order';
+import { ArchvingOrderExportJson as ArchiveOrderExportJson, Order, OrderSearchDto, OrderType, OrderStatusUpdateDto, TaskOrderExportJson } from '@/model/order';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ export class OrderService {
     return this.http.post<Pagination<Order>>(`/api/orders/admin/search`, dto);
   }
 
-  updateStatus(id: number, dto: OrderUpdateDto): Observable<Order> {
+  updateStatus(id: number, dto: OrderStatusUpdateDto): Observable<Order> {
     return this.http.put<Order>(`/api/orders/admin/${id}/status`, dto);
   }
 

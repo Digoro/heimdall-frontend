@@ -23,4 +23,32 @@
       </z-form-control>
     </z-form-field>
   }
+
+  @if (orderStatusForm.get('estimatedCollectionDate')) {
+    <z-form-field>
+      <z-form-label [zRequired]="true">Estimated Collection Date</z-form-label>
+      <z-form-control>
+        <z-date-picker
+          placeholder="Pick a date"
+          [maxDate]="maxDate"
+          zFormat="yyyy-MM-dd"
+          formControlName="estimatedCollectionDate"
+        />
+      </z-form-control>
+    </z-form-field>
+  }
+
+  @if (orderStatusForm.get('estimatedDeliveryDate')) {
+    <z-form-field>
+      <z-form-label [zRequired]="true">Estimated Delivery Date</z-form-label>
+      <z-form-control>
+        <z-date-picker
+          placeholder="Pick a date"
+          [maxDate]="maxDate"
+          zFormat="yyyy-MM-dd"
+          formControlName="estimatedDeliveryDate"
+        />
+      </z-form-control>
+    </z-form-field>
+  }
 </form>
