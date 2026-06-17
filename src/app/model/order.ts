@@ -27,8 +27,21 @@ export class Order {
     public user: User,
     public item: CatalogItem,
     public imaging: Imaging,
+    public statusHistory: OrderStatusHistory[],
     public createdAt: Date,
     public updatedAt: Date
+  ) { }
+}
+
+export class OrderStatusHistory {
+  constructor(
+    public id: string,
+    public order: Order,
+    public fromStatus: OrderStatus,
+    public toStatus: OrderStatus,
+    public createdAt: Date,
+    public updatedAt: Date,
+    public reason?: string,
   ) { }
 }
 
@@ -64,7 +77,8 @@ export class OrderSearchDto {
 
 export class OrderUpdateDto {
   constructor(
-    public status: OrderStatus
+    public status: OrderStatus,
+    public reason?: string
   ) { }
 }
 

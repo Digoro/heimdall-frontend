@@ -1,4 +1,3 @@
-import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ZardMenuImports } from "@/shared/components/menu";
@@ -8,12 +7,10 @@ import { ZardTableComponent, ZardTableCellComponent } from "@/shared/components/
 import { CommonModule, Location } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { lucideArchive, lucideArrowLeft, lucideDownload, lucideSatellite, lucideSquarePen, lucideUpload } from '@ng-icons/lucide';
-import { OrderStatusComponent } from "@/shared/components/order-status/order-status.component";
 import { UserService } from "@/service/user.service";
 import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
-import { ZardFormControlComponent, ZardFormFieldComponent, ZardFormLabelComponent } from "@/shared/components/form";
 import { ZardInputDirective } from "@/shared/components/input";
 import { toast } from "ngx-sonner";
 
@@ -25,16 +22,10 @@ import { toast } from "ngx-sonner";
     ZardButtonComponent,
     ZardCardComponent,
     ZardInputDirective,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
     ZardTableComponent,
     ZardPaginationImports,
     ZardMenuImports,
     ZardSelectImports,
-    ZardBadgeComponent,
-    NgIcon,
-    OrderStatusComponent,
     ZardTableCellComponent,
   ],
   providers: [

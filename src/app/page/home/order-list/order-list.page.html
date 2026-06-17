@@ -70,7 +70,7 @@
                 </z-badge>
               }
             </td>
-            <td z-table-cell><order-status [order]="order"></order-status></td>
+            <td z-table-cell><order-status [status]="order.status"></order-status></td>
             <td z-table-cell>{{ order.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>{{ order.updatedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>

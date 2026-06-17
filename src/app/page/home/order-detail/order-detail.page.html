@@ -41,27 +41,8 @@
             <th z-table-head>Status</th>
             <td z-table-cell>
               <div class="flex items-center gap-1">
-                @if (!isStatusEdit()) {
-                  <td z-table-cell><order-status [order]="order()"></order-status></td>
-                } @else {
-                  <form [formGroup]="form">
-                    <z-select
-                      #statusSelector
-                      zPlaceholder="Select Status"
-                      formControlName="status"
-                      (zSelectionChange)="changeStatus()"
-                    >
-                      @for (status of orderStatusList; track $index) {
-                        <z-select-item [zValue]="status">{{ status }}</z-select-item>
-                      }
-                    </z-select>
-                  </form>
-                }
-                <ng-icon
-                  name="lucideSquarePen"
-                  class="cursor-pointer"
-                  (click)="editOrderStatus()"
-                />
+                <td z-table-cell><order-status [status]="order().status"></order-status></td>
+                <ng-icon name="lucideSquarePen" class="cursor-pointer" (click)="changeStatus()" />
               </div>
             </td>
           </tr>
@@ -98,7 +79,7 @@
         </z-card>
       }
     </div>
-    <div class="flex gap-4 flex-wrap">
+    <div class="flex gap-4 flex-wrap mb-4">
       @if (order().item) {
         <z-card class="w-full md:w-94" zTitle="Item">
           <pre class="text-wrap">{{ order().item | json }}</pre>
@@ -165,6 +146,28 @@
               <th z-table-head>Orbit Direction</th>
               <td z-table-cell>{{ order().imaging.orbitDirection }}</td>
             </tr>
+          </table>
+        </z-card>
+      }
+      @if (order().statusHistory) {
+        <z-card class="w-full md:w-150 max-h-200 overflow-y-auto" zTitle="Status History">
+          <table z-table>
+            <tr z-table-row>
+              <th z-table-head>Status</th>
+              <th z-table-head>Date</th>
+              <th z-table-head>Reason</th>
+            </tr>
+            @for (history of order().statusHistory; track history.id) {
+              <tr z-table-row>
+                <td z-table-cell>
+                  <order-status [status]="history.fromStatus"></order-status>
+                  <ng-icon name="lucideArrowRight" />
+                  <order-status [status]="history.toStatus"></order-status>
+                </td>
+                <td z-table-cell>{{ history.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td z-table-cell>{{ history.reason }}</td>
+              </tr>
+            }
           </table>
         </z-card>
       }

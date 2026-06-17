@@ -8,13 +8,16 @@ import { ZardPaginationImports } from "@/shared/components/pagination";
 import { ZardSelectComponent, ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
 import { CommonModule, DatePipe, Location } from "@angular/common";
-import { Component, OnInit, signal, viewChild } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, inject, OnInit, signal, viewChild } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { toast } from "ngx-sonner";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArchive, lucideArrowLeft, lucideDownload, lucideSatellite, lucideSquarePen, lucideUpload } from '@ng-icons/lucide';
+import { lucideArchive, lucideArrowLeft, lucideArrowRight, lucideDownload, lucideSatellite, lucideSquarePen, lucideUpload } from '@ng-icons/lucide';
 import { OrderStatusComponent } from "@/shared/components/order-status/order-status.component";
+import { ZardDialogService } from "@/shared/components/dialog";
+import { EditOrderStatusComponent } from "./edit-order-status.component";
+import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
+import { toast } from "ngx-sonner";
 
 @Component({
   standalone: true,
@@ -30,7 +33,7 @@ import { OrderStatusComponent } from "@/shared/components/order-status/order-sta
     ZardBadgeComponent,
     ZardCardComponent,
     NgIcon,
-    OrderStatusComponent
+    OrderStatusComponent,
   ],
   providers: [
     OrderService,
@@ -39,19 +42,16 @@ import { OrderStatusComponent } from "@/shared/components/order-status/order-sta
   viewProviders: [
     provideIcons({
       lucideSquarePen, lucideArchive, lucideSatellite, lucideArrowLeft,
-      lucideUpload, lucideDownload
+      lucideUpload, lucideDownload, lucideArrowRight
     })
   ]
 })
 export class OrderDetailPage implements OnInit {
   statusSelector = viewChild<ZardSelectComponent>("statusSelector");
   order = signal({} as Order);
-  orderStatusList = Object.values(OrderStatus);
   selectedStatusList = signal<OrderStatus[]>([]);
-  form = new FormGroup({
-    status: new FormControl(''),
-  });
-  isStatusEdit = signal(false);
+  dialogService = inject(ZardDialogService);
+  alertDialogService = inject(ZardAlertDialogService);
 
   constructor(
     private orderService: OrderService,
@@ -64,19 +64,28 @@ export class OrderDetailPage implements OnInit {
     const orderId = this.route.snapshot.params['id'];
     this.orderService.get(orderId).subscribe(resp => {
       this.order.set(resp);
-      this.form.controls.status.setValue(resp.status);
     })
   }
 
   changeStatus() {
-    const status = this.form.controls.status.value as OrderStatus;
-    this.orderService.updateStatus(this.order().id, { status }).subscribe(resp => {
-      this.order.set(resp);
-      this.isStatusEdit.set(false);
-      toast.success('Order updated successfully', {
-        description: 'status has been successfully updated.',
-      });
-    })
+    this.dialogService.create({
+      zTitle: 'Update Order Status',
+      zDescription: `Enter the status to update.`,
+      zContent: EditOrderStatusComponent,
+      zOkText: 'Update',
+      zData: this.order(),
+      zOnOk: (instance) => {
+        const { status, reason } = instance.orderStatusForm.value;
+        this.orderService.updateStatus(this.order().id, { status, reason }).subscribe(updateResp => {
+          this.orderService.get(updateResp.id).subscribe(resp => {
+            this.order.set(resp);
+            toast.success('Order updated successfully', {
+              description: 'status has been successfully updated.',
+            });
+          })
+        })
+      },
+    });
   }
 
   back() {
@@ -85,13 +94,6 @@ export class OrderDetailPage implements OnInit {
 
   exportOrder() {
     this.orderService.exportOrder(this.order());
-  }
-
-  editOrderStatus() {
-    this.isStatusEdit.set(!this.isStatusEdit());
-    setTimeout(() => {
-      this.statusSelector()?.toggle();
-    })
   }
 
   uploadProduct() {

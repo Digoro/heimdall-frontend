@@ -1,0 +1,26 @@
+<form [formGroup]="orderStatusForm" class="space-y-4 sm:space-y-6">
+  <z-form-field>
+    <z-form-label [zRequired]="true">Status </z-form-label>
+    <z-form-control>
+      <z-select
+        #statusSelector
+        zPlaceholder="Select Status"
+        formControlName="status"
+        (zSelectionChange)="changeStatus()"
+      >
+        @for (status of orderStatusList; track $index) {
+          <z-select-item [zValue]="status">{{ status }}</z-select-item>
+        }
+      </z-select>
+    </z-form-control>
+  </z-form-field>
+
+  @if (orderStatusForm.get('reason')) {
+    <z-form-field>
+      <z-form-label [zRequired]="true">Reason</z-form-label>
+      <z-form-control>
+        <input z-input type="text" formControlName="reason" class="w-full" />
+      </z-form-control>
+    </z-form-field>
+  }
+</form>
