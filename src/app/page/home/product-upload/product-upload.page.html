@@ -1,159 +1,78 @@
-<div class="flex gap-4 p-4">
-  <div class="flex flex-wrap gap-4">
-    <z-card class="w-80">
-      <div class="space-y-4">
-        <div class="flex justify-between items-center mb-2">
-          <p class="font-bold">Upload SAR Image</p>
-          @if (sarFileOk()) {
-            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
-          }
-        </div>
-        <p class="text-sm text-gray-400">Upload the original SAR Imagery file (.tif/.tiff)</p>
-        <button z-button zType="outline" (click)="sarFileInput.click()">File Upload</button>
-        <input
-          type="file"
-          #sarFileInput
-          hidden
-          (change)="sarFileChange($event)"
-          accept=".tif, .tiff"
-        />
-        @if (sarFileOk()) {
-          <div class="flex gap-4 items-center">
-            <div class="flex border rounded-lg p-4 border-gray-300">
-              <ng-icon name="lucideFile" class="!w-5 !h-5" />
-            </div>
-            <div>
-              <p class="break-all text-sm">{{ sarFile().name }}</p>
-              <p class="text-sm text-gray-500">{{ formatBytes(sarFile().size) }}</p>
-            </div>
-          </div>
-        }
-        <div class="flex gap-4 items-center">
-          <z-progress-bar [progress]="sarProgress()" class="h-3" />
-          <p class="text-sm text-gray-500">{{ sarProgress() }}%</p>
-        </div>
-      </div>
-    </z-card>
-
-    <z-card class="w-80">
-      <div class="space-y-4">
-        <div class="flex justify-between items-center mb-2">
-          <p class="font-bold">Upload Thumbnail</p>
-          @if (thumbnailFileOk()) {
-            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
-          }
-        </div>
-        <p class="text-sm text-gray-400">Upload a preview thumbnail image (.png/.jpg/.jpeg)</p>
-        <button z-button zType="outline" (click)="thumbnailFileInput.click()">File Upload</button>
-        <input
-          type="file"
-          #thumbnailFileInput
-          hidden
-          (change)="thumbnailFileChange($event)"
-          accept=".png, .jpg, .jpeg"
-        />
-        @if (thumbnailFileOk()) {
-          <div class="flex gap-4 items-center">
-            <div class="border rounded-lg p-4 border-gray-300 flex">
-              <ng-icon name="lucideFile" class="!w-5 !h-5" />
-            </div>
-            <div>
-              <p class="break-all text-sm">{{ thumbnailFile().name }}</p>
-              <p class="text-sm text-gray-500">{{ formatBytes(thumbnailFile().size) }}</p>
-            </div>
-          </div>
-        }
-        <div class="flex gap-4 items-center">
-          <z-progress-bar [progress]="thumbnailProgress()" class="h-3" />
-          <p class="text-sm text-gray-500">{{ thumbnailProgress() }}%</p>
-        </div>
-      </div>
-    </z-card>
-
-    <z-card class="w-80">
-      <div class="space-y-4">
-        <div class="flex justify-between items-center mb-2">
-          <p class="font-bold">Upload Metadata</p>
-          @if (metadataFileOk()) {
-            <ng-icon name="lucideCircleCheck" class="!text-green-500 !w-5 !h-5" />
-          }
-        </div>
-        <p class="text-sm text-gray-400">Upload the metadata file (.json)</p>
-        <button z-button zType="outline" (click)="metadataFileInput.click()">File Upload</button>
-        <input
-          type="file"
-          #metadataFileInput
-          hidden
-          (change)="metadataFileChange($event)"
-          accept=".json"
-        />
-        @if (metadataFileOk()) {
-          <div class="flex gap-4 items-center">
-            <div class="border rounded-lg p-4 border-gray-300 flex">
-              <ng-icon name="lucideFile" class="!w-5 !h-5" />
-            </div>
-            <div>
-              <p class="break-all text-sm">{{ metadataFile().name }}</p>
-              <p class="text-sm text-gray-500">{{ formatBytes(metadataFile().size) }}</p>
-            </div>
-          </div>
-        }
-        <div class="flex gap-4 items-center">
-          <z-progress-bar [progress]="metadataProgress()" class="h-3" />
-          <p class="text-sm text-gray-500">{{ metadataProgress() }}%</p>
-        </div>
-      </div>
-    </z-card>
-
-    <z-card class="w-60">
-      <div class="space-y-4">
-        <div class="flex justify-between items-center mb-2">
-          <p class="font-bold">Order ID</p>
-        </div>
-        <p class="text-sm text-gray-400">
-          When you enter an order ID, the order status automatically changes to 'Completed'
+<div class="p-4">
+  <div class="flex justify-between">
+    <div class="space-y-8">
+      <div>
+        <p class="font-bold">Order ID</p>
+        <p class="text-sm text-gray-400 mb-2">
+          the order status automatically changes to 'Delivered'
         </p>
         <form [formGroup]="form">
-          <input z-input type="text" placeholder="Order ID" formControlName="orderId" />
+          <input
+            z-input
+            type="text"
+            placeholder="Order ID"
+            formControlName="orderId"
+            class="w-80"
+          />
         </form>
       </div>
-    </z-card>
-  </div>
 
-  <div class="flex gap-2">
-    <button z-button zType="outline" (click)="cancel()">Cancel</button>
-    <button
-      z-button
-      [zDisabled]="!sarFileOk() || !thumbnailFileOk() || !metadataFileOk()"
-      (click)="submit()"
-    >
-      Submit
-    </button>
-  </div>
-</div>
+      @for (slot of slots(); track slot.key) {
+        <div>
+          <p class="font-bold">{{ slot.label }}</p>
+          <p class="text-sm text-gray-400 mb-2">{{ slot.description }}</p>
+          <button z-button zType="outline" (click)="fileInput.click()">File Upload</button>
+          <input
+            [id]="slot.key"
+            #fileInput
+            hidden
+            [id]="slot.key"
+            type="file"
+            [accept]="slot.accept"
+            (change)="onFileChange($event, slot.key)"
+          />
 
-@if (thumbnailFileOk() || metadataFileOk()) {
-  <z-divider />
-}
+          @if (slot.file) {
+            <div class="flex mt-2">
+              <div class="flex gap-4 items-center border rounded-lg p-4 border-gray-300">
+                <ng-icon name="lucideFile" class="!w-5 !h-5" />
+                <div>
+                  <p class="break-all text-sm">{{ slot.file.name }}</p>
+                  <p class="text-sm text-gray-500">{{ formatSize(slot.file.size) }}</p>
+                </div>
+              </div>
+            </div>
+          }
 
-<div class="p-4 flex gap-4">
-  @if (thumbnailPreview()) {
-    <z-card class="w-[50%]">
-      <div class="space-y-4">
-        <p class="font-bold">Thumbnail Viewer</p>
-        <!-- <img [src]="thumbnailPreview()" style="width: 500px; height: 400px" /> -->
-        <z-skeleton class="w-160 h-100 rounded-xl" />
+          @if (slot.key == 'metadata' && slot.previewText) {
+            <div class="w-120 h-80 overflow-auto border mt-2">
+              <pre class="max-h-100">{{ slot.previewText }}</pre>
+            </div>
+          }
+
+          @if (slot.key == 'thumbnail' && slot.previewUrl) {
+            <div class="w-120 h-80 overflow-auto border mt-2">
+              <img class="max-h-100" [src]="slot.previewUrl" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+    <div>
+      @if (productService.isUploading()) {
+        <z-progress-bar [progress]="productService.progress()" class="h-3" />
+        <p class="text-sm text-gray-500">{{ productService.progress() }}%</p>
+      }
+
+      <div class="flex gap-2">
+        <button
+          z-button
+          (click)="upload()"
+          [zDisabled]="form.invalid || productService.isUploading() || !hasAnyFile()"
+        >
+          {{ productService.isUploading() ? 'Uploading...' : 'Submit' }}
+        </button>
       </div>
-    </z-card>
-  }
-
-  @if (metadataPreview()) {
-    <z-card class="w-[50%]">
-      <div class="space-y-4">
-        <p class="font-bold">Metadata Viewer</p>
-        <!-- <pre>{{ metadataPreview() }}</pre> -->
-        <z-skeleton class="w-160 h-100 rounded-xl" />
-      </div>
-    </z-card>
-  }
+    </div>
+  </div>
 </div>

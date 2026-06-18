@@ -1,14 +1,10 @@
+import { FileSlot } from "@/model/product";
 import { ProductService } from "@/service/product.service";
-import { ZardAlertDialogService } from "@/shared/components/alert-dialog";
 import { ZardButtonComponent } from "@/shared/components/button";
-import { ZardCardComponent } from "@/shared/components/card";
-import { ZardDividerComponent } from "@/shared/components/divider";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
-import { ZardSkeletonComponent } from "@/shared/components/skeleton";
-import { HttpEventType } from "@angular/common/http";
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Component, OnInit, signal } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideCircleCheck, lucideFile } from "@ng-icons/lucide";
@@ -22,10 +18,7 @@ import { toast } from "ngx-sonner";
     ZardButtonComponent,
     ReactiveFormsModule,
     ZardInputDirective,
-    ZardCardComponent,
-    ZardProgressBarComponent,
-    ZardDividerComponent,
-    ZardSkeletonComponent
+    ZardProgressBarComponent
   ],
   providers: [
     ProductService
@@ -38,31 +31,34 @@ import { toast } from "ngx-sonner";
   ]
 })
 export class ProductUploadPage implements OnInit {
-  sarProgress = signal(0);
-  sarFileOk = signal(false);
-  @ViewChild('sarFileInput') sarFileInput!: ElementRef;
-  sarFile = signal(new File([], ''));
-
-  thumbnailProgress = signal(0);
-  thumbnailFileOk = signal(false);
-  @ViewChild('thumbnailFileInput') thumbnailFileInput!: ElementRef;
-  thumbnailFile = signal(new File([], ''));
-  thumbnailPreview = signal('');
-
-  metadataProgress = signal(0);
-  metadataFileOk = signal(false);
-  @ViewChild('metadataFileInput') metadataFileInput!: ElementRef;
-  metadataFile = signal(new File([], ''));
-  metadataPreview = signal('');
-
   form = new FormGroup({
-    orderId: new FormControl('')
+    orderId: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(50)])
   });
-
-  alertDialogService = inject(ZardAlertDialogService);
+  slots = signal<FileSlot[]>([
+    {
+      key: 'data', label: 'SAR Image',
+      description: 'Upload the original SAR Imagery file (.tif)',
+      accept: '.tif,image/tiff',
+      file: null, previewUrl: null, previewText: null
+    },
+    {
+      key: 'metadata', label: 'Metadata',
+      description: 'Upload the metadata file (.json)',
+      accept: '.json,application/json',
+      file: null, previewUrl: null, previewText: null
+    },
+    {
+      key: 'thumbnail', label: 'Thumbnail',
+      description: 'Upload a preview thumbnail image (.png)',
+      accept: '.png,.jpg,.jpeg,.webp',
+      file: null, previewUrl: null, previewText: null
+    }
+  ]);
+  result = signal<string>('');
+  hasError = signal<boolean>(false);
 
   constructor(
-    private productService: ProductService,
+    public productService: ProductService,
     private route: ActivatedRoute
   ) { }
 
@@ -73,144 +69,80 @@ export class ProductUploadPage implements OnInit {
     })
   }
 
-  sarFileChange(event: any) {
-    this.sarFile.set(event.target.files[0]);
-    const fileName = this.sarFile().name.toLowerCase();
-    if (!fileName.endsWith('.tif') && !fileName.endsWith('.tiff')) {
-      this.alertDialogService.warning({
-        zTitle: 'Invalid File Type',
-        zDescription: 'Only TIF/TIFF files are allowed.',
-        zOkText: 'Confirm',
-      });
-      return;
-    }
+  onFileChange(event: Event, key: FileSlot['key']) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
 
-    if (this.sarFile()) {
-      this.sarFileOk.set(false);
-      const formData = new FormData();
-      formData.append('file', this.sarFile());
-      this.productService.upload(formData).subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress) {
-          const percent = Math.round((event.loaded / (event.total ?? 1)) * 100);
-          this.sarProgress.set(percent);
-        }
-        if (event.type == HttpEventType.Response) {
-          this.sarFileOk.set(true);
-          toast.success('SAR image uploaded successfully', {
-            description: 'sar image has been successfully uploaded.',
+    this.slots.update(slots => slots.map(s => (s.key == key ? { ...s, file } : s)));
+    if (key == 'thumbnail') this.readAsDataURL(file, key);
+    if (key == 'metadata') this.readAsText(file, key);
+  }
+
+  upload() {
+    if (!this.hasAnyFile() || this.productService.isUploading()) return;
+
+    const fileMap = {
+      data: this.slots().find(s => s.key == 'data')?.file,
+      metadata: this.slots().find(s => s.key == 'metadata')?.file,
+      thumbnail: this.slots().find(s => s.key == 'thumbnail')?.file,
+    };
+
+    this.result.set('');
+    this.hasError.set(false);
+
+    this.productService.uploadProductFiles(this.form.controls.orderId.value!, {
+      data: fileMap.data!,
+      metadata: fileMap.metadata!,
+      thumbnail: fileMap.thumbnail!
+    }).subscribe({
+      next: event => {
+        if (event.type == 'complete') {
+          this.result.set(event.body.message);
+          this.hasError.set(event.body.errors.length > 0);
+          this.slots.update(slots => slots.map(s => (event.body.uploaded.includes(s.key) ? { ...s, file: null, previewText: null, previewUrl: null } : s)));
+          toast.success('SAR product uploaded successfully', {
+            description: event.body.message,
           });
         }
-      })
-    }
-  }
-
-  thumbnailFileChange(event: any) {
-    this.thumbnailFile.set(event.target.files[0]);
-    const fileName = this.thumbnailFile().name.toLowerCase();
-    if (!fileName.endsWith('.png') && !fileName.endsWith('.jpg') && !fileName.endsWith('.jpeg')) {
-      this.alertDialogService.warning({
-        zTitle: 'Invalid File Type',
-        zDescription: 'Only PNG/JPG/JPEG files are allowed.',
-        zOkText: 'Confirm',
-      });
-      return;
-    }
-
-    if (this.sarFile()) {
-      this.thumbnailFileOk.set(false);
-      const formData = new FormData();
-      formData.append('file', this.thumbnailFile());
-      this.productService.upload(formData).subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress) {
-          const percent = Math.round((event.loaded / (event.total ?? 1)) * 100);
-          this.thumbnailProgress.set(percent);
-        }
-        if (event.type == HttpEventType.Response) {
-          this.thumbnailFileOk.set(true);
-          const reader = new FileReader();
-          reader.onload = () => {
-            this.thumbnailPreview.set(reader.result as string);
-          }
-          reader.readAsDataURL(this.thumbnailFile());
-          toast.success('Thumbnail uploaded successfully', {
-            description: 'thumbnail has been successfully uploaded.',
-          });
-        }
-      })
-    }
-  }
-
-  metadataFileChange(event: any) {
-    this.metadataFile.set(event.target.files[0]);
-    const fileName = this.metadataFile().name.toLowerCase();
-    if (!fileName.endsWith('.json')) {
-      this.alertDialogService.warning({
-        zTitle: 'Invalid File Type',
-        zDescription: 'Only JSON files are allowed.',
-        zOkText: 'Confirm',
-      });
-      return;
-    }
-
-    if (this.metadataFile()) {
-      this.metadataFileOk.set(false);
-      const formData = new FormData();
-      formData.append('file', this.metadataFile());
-      this.productService.upload(formData).subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress) {
-          const percent = Math.round((event.loaded / (event.total ?? 1)) * 100);
-          this.metadataProgress.set(percent);
-        }
-        if (event.type == HttpEventType.Response) {
-          this.metadataFileOk.set(true);
-          const reader = new FileReader();
-          reader.onload = () => {
-            this.metadataPreview.set(reader.result as string);
-          }
-          reader.readAsText(this.metadataFile());
-          toast.success('Metadata uploaded successfully', {
-            description: 'metadata has been successfully uploaded.',
-          });
-        }
-      })
-    }
-  }
-
-  formatBytes(bytes: number) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    if (bytes == 0) return '0 Byte';
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sizes[i]}`;
-  }
-
-  cancel() {
-    this.alertDialogService.confirm({
-      zTitle: 'Cancel Upload',
-      zDescription: 'Are you sure you want to cancel this upload? The selected file will be removed.',
-      zCancelText: 'Cancel',
-      zOkText: 'Confirm',
-      zOnOk: () => {
-        this.sarFile.set(new File([], ''));
-        this.sarFileInput.nativeElement.value = '';
-        this.sarProgress = signal(0);
-        this.sarFileOk = signal(false);
-
-        this.thumbnailFile.set(new File([], ''));
-        this.thumbnailFileInput.nativeElement.value = '';
-        this.thumbnailProgress = signal(0);
-        this.thumbnailFileOk = signal(false);
-        this.thumbnailPreview = signal('');
-
-        this.metadataFile.set(new File([], ''));
-        this.metadataFileInput.nativeElement.value = '';
-        this.metadataProgress = signal(0);
-        this.metadataFileOk = signal(false);
-        this.metadataPreview = signal('');
+      },
+      error: err => {
+        this.result.set(`Upload failed: ${err.error?.message ?? err.message}`);
+        this.hasError.set(true);
+        this.productService.isUploading.set(false);
+        toast.error('SAR product uploaded failed', {
+          description: `${err.error?.message ?? err.message}`
+        });
       }
-    });
+    })
   }
 
-  submit() {
-    this.productService
+  private readAsDataURL(file: File, key: FileSlot['key']) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.slots.update(slots => slots.map(s => (s.key == key) ? { ...s, previewUrl: reader.result as string } : s));
+    }
+    reader.readAsDataURL(file);
+  }
+
+  private readAsText(file: File, key: FileSlot['key']) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result as string);
+        this.slots.update(slots => slots.map(s => (s.key == key ? { ...s, previewText: JSON.stringify(parsed, null, 2) } : s)));
+      } catch {
+        this.slots.update(slots => slots.map(s => (s.key == key) ? { ...s, previewText: 'Invalid JSON format' } : s));
+      }
+    }
+    reader.readAsText(file);
+  }
+
+  hasAnyFile(): boolean {
+    return this.slots().some(s => s.file != null);
+  }
+
+  formatSize(bytes: number): string {
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 }

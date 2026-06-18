@@ -9,21 +9,13 @@ export class Order {
     public type: OrderType,
     public productType: ProductType,
     public status: OrderStatus,
-    public downloadUrl: string,
-    public receivedAt: Date,
-    public estimatingAt: Date,
-    public rejectedByAdminAt: Date,
-    public pendingAt: Date,
-    public rejectedByUserAt: Date,
-    public approvedAt: Date,
-    public scheduledAt: Date,
-    public collectingAt: Date,
-    public collectedAt: Date,
-    public processingAt: Date,
-    public qaAt: Date,
-    public deliveredAt: Date,
-    public failedAt: Date,
-    public canceledAt: Date,
+    public filePath: {
+      data: string;
+      metadata: string;
+      thumbnail: string;
+    },
+    public estimatedDeliveryDate: Date,
+    public estimatedCollectionDate: Date,
     public user: User,
     public item: CatalogItem,
     public imaging: Imaging,
