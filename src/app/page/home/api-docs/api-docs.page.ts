@@ -26,6 +26,6 @@ export class APIDocsPage implements OnInit {
   }
 
   setUrl(mode: string) {
-    this.swaggerUrl.set(this.santizer.bypassSecurityTrustResourceUrl(mode == 'dark' ? 'http://localhost:3000/api-docs-dark' : 'http://localhost:3000/api-docs-light'));
+    this.swaggerUrl.set(this.santizer.bypassSecurityTrustResourceUrl(mode == 'dark' ? '/api-docs-dark' : '/api-docs-light'));
   }
 }
