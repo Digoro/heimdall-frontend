@@ -80,18 +80,14 @@
       }
     </div>
     <div class="flex gap-4 flex-wrap mb-4">
-      @if (order().item) {
-        <z-card class="w-full md:w-94" zTitle="Item">
-          <pre class="text-wrap">{{ order().item | json }}</pre>
+      @if (order().referencedItem) {
+        <z-card class="w-full md:w-150" zTitle="Item">
+          <pre class="text-wrap">{{ order().referencedItem | json }}</pre>
         </z-card>
       }
       @if (order().imaging) {
-        <z-card class="w-full md:w-94" zTitle="Imaging">
+        <z-card class="w-full md:w-120" zTitle="Imaging">
           <table z-table>
-            <!-- <tr z-table-row>
-              <th z-table-head>Corner Coordinates</th>
-              <td z-table-cell>{{ order().imaging?.geometry?.type }}</td>
-            </tr> -->
             @if (!!order().imaging.name) {
               <tr z-table-row>
                 <th z-table-head>Name</th>
@@ -109,13 +105,20 @@
               <td z-table-cell>{{ order().imaging.priority }}</td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>imaging Start At</th>
+              <th z-table-head>Corner Coordinates</th>
+              <td z-table-cell>
+                <p>{{ order().imaging?.geometry?.type }}</p>
+                <p>{{ order().imaging?.geometry?.coordinates | json }}</p>
+              </td>
+            </tr>
+            <tr z-table-row>
+              <th z-table-head>Window Open</th>
               <td z-table-cell>
                 {{ order().imaging.windowOpen | date: 'yyyy-MM-dd HH:mm:ss' }}
               </td>
             </tr>
             <tr z-table-row>
-              <th z-table-head>Imaging End At</th>
+              <th z-table-head>Window Close</th>
               <td z-table-cell>{{ order().imaging.windowClose | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             </tr>
             <tr z-table-row>

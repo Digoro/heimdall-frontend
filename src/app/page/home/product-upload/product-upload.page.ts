@@ -1,6 +1,7 @@
 import { FileSlot } from "@/model/product";
 import { ProductService } from "@/service/product.service";
 import { ZardButtonComponent } from "@/shared/components/button";
+import { ZardCardComponent } from "@/shared/components/card";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardProgressBarComponent } from "@/shared/components/progress-bar";
 import { Component, OnInit, signal } from "@angular/core";
@@ -18,7 +19,8 @@ import { toast } from "ngx-sonner";
     ZardButtonComponent,
     ReactiveFormsModule,
     ZardInputDirective,
-    ZardProgressBarComponent
+    ZardProgressBarComponent,
+    ZardCardComponent
   ],
   providers: [
     ProductService

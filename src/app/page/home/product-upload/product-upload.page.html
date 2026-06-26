@@ -1,63 +1,66 @@
 <div class="p-4">
   <div class="flex justify-between">
-    <div class="space-y-8">
-      <div>
-        <p class="font-bold">Order ID</p>
-        <p class="text-sm text-gray-400 mb-2">
-          the order status automatically changes to 'Delivered'
-        </p>
-        <form [formGroup]="form">
-          <input
-            z-input
-            type="text"
-            placeholder="Order ID"
-            formControlName="orderId"
-            class="w-80"
-          />
-        </form>
-      </div>
-
-      @for (slot of slots(); track slot.key) {
+    <z-card>
+      <div class="space-y-8">
         <div>
-          <p class="font-bold">{{ slot.label }}</p>
-          <p class="text-sm text-gray-400 mb-2">{{ slot.description }}</p>
-          <button z-button zType="outline" (click)="fileInput.click()">File Upload</button>
-          <input
-            [id]="slot.key"
-            #fileInput
-            hidden
-            [id]="slot.key"
-            type="file"
-            [accept]="slot.accept"
-            (change)="onFileChange($event, slot.key)"
-          />
+          <p class="font-bold">Order ID</p>
+          <p class="text-sm text-gray-400 mb-2">
+            the order status automatically changes to 'Delivered'
+          </p>
+          <form [formGroup]="form">
+            <input
+              z-input
+              type="text"
+              placeholder="Order ID"
+              formControlName="orderId"
+              class="w-80"
+            />
+          </form>
+        </div>
 
-          @if (slot.file) {
-            <div class="flex mt-2">
-              <div class="flex gap-4 items-center border rounded-lg p-4 border-gray-300">
-                <ng-icon name="lucideFile" class="!w-5 !h-5" />
-                <div>
-                  <p class="break-all text-sm">{{ slot.file.name }}</p>
-                  <p class="text-sm text-gray-500">{{ formatSize(slot.file.size) }}</p>
+        @for (slot of slots(); track slot.key) {
+          <div>
+            <p class="font-bold">{{ slot.label }}</p>
+            <p class="text-sm text-gray-400 mb-2">{{ slot.description }}</p>
+            <button z-button zType="outline" (click)="fileInput.click()">File Upload</button>
+            <input
+              [id]="slot.key"
+              #fileInput
+              hidden
+              [id]="slot.key"
+              type="file"
+              [accept]="slot.accept"
+              (change)="onFileChange($event, slot.key)"
+            />
+
+            @if (slot.file) {
+              <div class="flex mt-2">
+                <div class="flex gap-4 items-center border rounded-lg p-4 border-gray-300">
+                  <ng-icon name="lucideFile" class="!w-5 !h-5" />
+                  <div>
+                    <p class="break-all text-sm">{{ slot.file.name }}</p>
+                    <p class="text-sm text-gray-500">{{ formatSize(slot.file.size) }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          }
+            }
 
-          @if (slot.key == 'metadata' && slot.previewText) {
-            <div class="w-120 h-80 overflow-auto border mt-2">
-              <pre class="max-h-100">{{ slot.previewText }}</pre>
-            </div>
-          }
+            @if (slot.key == 'metadata' && slot.previewText) {
+              <div class="w-120 h-80 overflow-auto border mt-2">
+                <pre class="max-h-100">{{ slot.previewText }}</pre>
+              </div>
+            }
 
-          @if (slot.key == 'thumbnail' && slot.previewUrl) {
-            <div class="w-120 h-80 overflow-auto border mt-2">
-              <img class="max-h-100" [src]="slot.previewUrl" />
-            </div>
-          }
-        </div>
-      }
-    </div>
+            @if (slot.key == 'thumbnail' && slot.previewUrl) {
+              <div class="w-120 h-80 overflow-auto border mt-2">
+                <img class="max-h-100" [src]="slot.previewUrl" />
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </z-card>
+
     <div>
       @if (productService.isUploading()) {
         <z-progress-bar [progress]="productService.progress()" class="h-3" />

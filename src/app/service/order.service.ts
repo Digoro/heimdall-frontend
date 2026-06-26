@@ -24,7 +24,7 @@ export class OrderService {
 
   exportOrder(order: Order) {
     if (order.type == OrderType.ARCHIVE) {
-      const item = order.item;
+      const item = order.referencedItem;
       const archiveOrder: ArchiveOrderExportJson = {
         orderId: order.id,
         productType: order.productType,

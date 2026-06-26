@@ -38,7 +38,8 @@
           <th z-table-head>Index</th>
           <th z-table-head>Order ID</th>
           <th z-table-head>User</th>
-          <th z-table-head>Type</th>
+          <th z-table-head>Product Type</th>
+          <th z-table-head>Order Type</th>
           <th z-table-head>Status</th>
           <th z-table-head>Created</th>
           <th z-table-head>Updated</th>
@@ -57,6 +58,7 @@
                 >{{ order.user.name }} / {{ order.user.department }}</span
               >
             </td>
+            <td z-table-cell>{{ order.productType }}</td>
             <td z-table-cell>
               @if (order.type == 'Archive') {
                 <z-badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
