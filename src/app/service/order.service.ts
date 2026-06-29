@@ -34,7 +34,7 @@ export class OrderService {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_ArchiveOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
+      a.download = `Hiemdall_ArchiveOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }
@@ -49,7 +49,7 @@ export class OrderService {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `OMS_TaskOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
+      a.download = `Hiemdall_TaskOrder_${order.id}_${order.productType}_${new Date().toISOString()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
     }

@@ -100,7 +100,7 @@ export class HomePage implements OnInit {
         }
         const title = currentRoute.snapshot.data['pageTitle'];
         this.pageTitle.set(title);
-        this.titleService.setTitle(`OMS - ${title}`);
+        this.titleService.setTitle(`Heimdall - ${title}`);
       });
 
     const user = this.authService.currentUser();
