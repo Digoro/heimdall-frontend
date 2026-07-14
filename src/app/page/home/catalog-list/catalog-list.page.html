@@ -1,0 +1,32 @@
+<div class="flex flex-col gap-4 p-4">
+  <div class="rounded-md border h-fit">
+    <table z-table>
+      <thead z-table-header>
+        <tr z-table-row>
+          <th z-table-head>Index</th>
+          <th z-table-head>Item ID</th>
+          <th z-table-head>Properties</th>
+          <th z-table-head>Created At</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody z-table-body>
+        @for (catalog of catalogs(); track catalog.id; let idx = $index) {
+          <tr z-table-row>
+            <td z-table-cell>{{ idx + 1 }}</td>
+            <td z-table-cell>{{ catalog.itemId }}</td>
+            <td z-table-cell>{{ catalog.collection }}</td>
+            <td z-table-cell>{{ catalog.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td z-table-cell>
+              <button z-button (click)="openDetailDialog(catalog)">View Detail</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr z-table-row>
+            <td z-table-cell [attr.colspan]="8" class="h-60 text-center">No results.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

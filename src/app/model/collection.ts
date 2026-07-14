@@ -38,7 +38,15 @@ export interface CatalogCollection {
   items: CatalogItem[];
 }
 
+export interface CatalogResponse {
+  type: string;
+  features: CatalogItem[];
+  context: any;
+  link: any;
+}
+
 export interface CatalogItem {
+  id: string;
   itemId: string;
   type: string;
   stacVersion: string;
@@ -88,6 +96,8 @@ export interface CatalogItem {
   user: User;
   product: Product;
   orders: Order[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export enum ImagingMode {
@@ -97,4 +107,11 @@ export enum ImagingMode {
   SPOTLIGHT_DWELL = "Spotlight_Dwell",
   SPOTLIGHT_SINGLE_UHR = "Spotlight_Single_UHR",
   SPOTLIGHT_DWELL_UHR = "Spotlight_Dwell_UHR"
+}
+
+export class CatalogSearchDto {
+  constructor(
+    public page: number,
+    public limit: number,
+  ) { }
 }
