@@ -11,7 +11,7 @@ import { Component, OnInit, signal } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLinkWithHref, RouterModule, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBookOpen, lucideChevronsUpDown, lucideFolderUp, lucideKeyRound, lucideLogOut, lucideMoon, lucideSettings, lucideShoppingCart, lucideSun, lucideUserRoundCog } from '@ng-icons/lucide';
+import { lucideBookOpen, lucideChevronsUpDown, lucideFolderUp, lucideKeyRound, lucideList, lucideLogOut, lucideMoon, lucideSettings, lucideShoppingCart, lucideSun, lucideUserRoundCog } from '@ng-icons/lucide';
 import { filter } from 'rxjs';
 
 interface Menu {
@@ -45,7 +45,7 @@ interface MenuItem {
   templateUrl: './home.page.html',
   viewProviders: [
     provideIcons({
-      lucideBookOpen, lucideFolderUp, lucideUserRoundCog, lucideKeyRound, lucideShoppingCart,
+      lucideBookOpen, lucideFolderUp, lucideList, lucideUserRoundCog, lucideKeyRound, lucideShoppingCart,
       lucideChevronsUpDown, lucideSun, lucideMoon, lucideLogOut, lucideSettings
     })
   ]
@@ -69,6 +69,7 @@ export class HomePage implements OnInit {
     },
     {
       title: 'Catalog', items: [
+        { icon: 'lucideList', label: 'Catalog List', page: 'catalogs' },
         { icon: 'lucideFolderUp', label: 'Upload Product', page: 'upload-product' }
       ]
     },

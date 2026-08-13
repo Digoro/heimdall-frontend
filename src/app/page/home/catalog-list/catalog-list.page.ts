@@ -3,24 +3,21 @@ import { CatalogService } from "@/service/catalog.service";
 import { ZardDialogService } from "@/shared/components/dialog";
 import { ZardMenuImports } from "@/shared/components/menu";
 import { ZardPaginationImports } from "@/shared/components/pagination";
-import { ZardSelectImports } from "@/shared/components/select";
 import { ZardTableComponent } from "@/shared/components/table";
 import { DatePipe } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-import { provideIcons } from "@ng-icons/core";
+import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideArchive, lucideDownload, lucideEllipsis, lucideInfo, lucideMail, lucideSatellite, lucideUpload } from "@ng-icons/lucide";
-import { CatalogDetailComponent } from "./catalog-detail.component";
+import { Router } from "@angular/router";
 
 @Component({
   standalone: true,
   imports: [
+    NgIcon,
     ZardTableComponent,
     ZardPaginationImports,
     DatePipe,
     ZardMenuImports,
-    ReactiveFormsModule,
-    ZardSelectImports,
   ],
   providers: [
     CatalogService,
@@ -40,6 +37,7 @@ export class CatalogListPage implements OnInit {
 
   constructor(
     private catalogService: CatalogService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -51,13 +49,7 @@ export class CatalogListPage implements OnInit {
     });
   }
 
-  openDetailDialog(catalog: any) {
-    this.dialogService.create({
-      zTitle: 'Detail',
-      zContent: CatalogDetailComponent,
-      zOkText: 'Ok',
-      zData: catalog,
-      zCancelText: null
-    });
+  viewDetail(catalogItem: CatalogItem) {
+    this.router.navigate(['/catalogs', catalogItem.itemId])
   }
 }

@@ -1,0 +1,11 @@
+<div class="p-4">
+  <div class="flex justify-between mb-6">
+    <ng-icon name="lucideArrowLeft" class="w-4 h-4 cursor-pointer" (click)="back()" />
+  </div>
+
+  @if (catalog()) {
+    <div class="flex gap-4 flex-wrap mb-4">
+      <pre class="whitespace-pre-wrap break-all">{{ catalog() | json }}</pre>
+    </div>
+  }
+</div>

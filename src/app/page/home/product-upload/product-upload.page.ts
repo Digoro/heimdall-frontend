@@ -57,7 +57,6 @@ export class ProductUploadPage implements OnInit {
     }
   ]);
   result = signal<string>('');
-  hasError = signal<boolean>(false);
 
   constructor(
     public productService: ProductService,
@@ -90,7 +89,6 @@ export class ProductUploadPage implements OnInit {
     };
 
     this.result.set('');
-    this.hasError.set(false);
 
     this.productService.uploadProductFiles(this.form.controls.orderId.value!, {
       data: fileMap.data!,
@@ -100,8 +98,9 @@ export class ProductUploadPage implements OnInit {
       next: event => {
         if (event.type == 'complete') {
           this.result.set(event.body.message);
-          this.hasError.set(event.body.errors.length > 0);
-          this.slots.update(slots => slots.map(s => (event.body.uploaded.includes(s.key) ? { ...s, file: null, previewText: null, previewUrl: null } : s)));
+          this.slots.update(slots => slots.map(s => {
+            return { ...s, file: null, previewText: null, previewUrl: null };
+          }));
           toast.success('SAR product uploaded successfully', {
             description: event.body.message,
           });
@@ -109,7 +108,6 @@ export class ProductUploadPage implements OnInit {
       },
       error: err => {
         this.result.set(`Upload failed: ${err.error?.message ?? err.message}`);
-        this.hasError.set(true);
         this.productService.isUploading.set(false);
         toast.error('SAR product uploaded failed', {
           description: `${err.error?.message ?? err.message}`

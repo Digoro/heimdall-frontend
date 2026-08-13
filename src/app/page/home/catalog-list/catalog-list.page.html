@@ -5,7 +5,7 @@
         <tr z-table-row>
           <th z-table-head>Index</th>
           <th z-table-head>Item ID</th>
-          <th z-table-head>Properties</th>
+          <th z-table-head>Collection</th>
           <th z-table-head>Created At</th>
           <th></th>
         </tr>
@@ -18,7 +18,18 @@
             <td z-table-cell>{{ catalog.collection }}</td>
             <td z-table-cell>{{ catalog.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
             <td z-table-cell>
-              <button z-button (click)="openDetailDialog(catalog)">View Detail</button>
+              <button type="button" z-button zType="outline" z-menu [zMenuTriggerFor]="menu">
+                <ng-icon name="lucideEllipsis" />
+
+                <ng-template #menu>
+                  <div z-menu-content class="w-48">
+                    <button type="button" z-menu-item (click)="viewDetail(catalog)">
+                      <ng-icon name="lucideInfo" class="mr-2" />
+                      View Detail
+                    </button>
+                  </div>
+                </ng-template>
+              </button>
             </td>
           </tr>
         } @empty {
