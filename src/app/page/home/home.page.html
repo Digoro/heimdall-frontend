@@ -1,58 +1,61 @@
 <div class="flex h-screen">
   <z-sidebar [zWidth]="256" [zCollapsed]="sidebarCollapsed()" [zCollapsedWidth]="70" class="p-0!">
-    <nav [class]="
+    <nav
+      [class]="
         'flex h-full flex-col overflow-hidden ' +
         (sidebarCollapsed() ? 'gap-1 p-1 pt-4' : 'gap-4 p-4')
-      ">
-      <div class="flex items-center gap-2 text-lg font-semibold"
-        [class]="sidebarCollapsed() ? 'justify-center' : 'px-1'">
+      "
+    >
+      <div
+        class="flex items-center gap-2 text-lg font-semibold"
+        [class]="sidebarCollapsed() ? 'justify-center' : 'px-1'"
+      >
         <img src="oms_logo.png" width="24" />
         @if (!sidebarCollapsed()) {
-        <span>Heimdall</span>
+          <span>Heimdall</span>
         }
       </div>
 
       <z-sidebar-group>
         @for (menu of menus; track menu.title) {
-        @if (!sidebarCollapsed()) {
-        <z-sidebar-group-label>{{ menu.title }}</z-sidebar-group-label>
-        }
-        @for (item of menu.items; track item.label) {
-        @if (themeMode() == 'dark') {
-        <a [routerLink]="item.page" routerLinkActive="bg-primary text-black"
-          class="flex gap-1 items-center p-2.5 rounded-[10px]" [class]="sidebarCollapsed() ? 'justify-center' : ''">
-          <ng-icon name="{{ item.icon }}" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
           @if (!sidebarCollapsed()) {
-          <span class="text-sm font-medium">{{ item.label }}</span>
+            <z-sidebar-group-label>{{ menu.title }}</z-sidebar-group-label>
           }
-        </a>
-        } @else {
-        <a [routerLink]="item.page" routerLinkActive="bg-primary text-white"
-          class="flex gap-1 items-center p-2.5 rounded-[10px]" [class]="sidebarCollapsed() ? 'justify-center' : ''">
-          <ng-icon name="{{ item.icon }}" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
-          @if (!sidebarCollapsed()) {
-          <span class="text-sm font-medium">{{ item.label }}</span>
+          @for (item of menu.items; track item.label) {
+            <a
+              [routerLink]="item.page"
+              routerLinkActive="bg-primary text-primary-foreground"
+              class="flex gap-1 items-center p-2.5 rounded-[10px]"
+              [class]="sidebarCollapsed() ? 'justify-center' : ''"
+            >
+              <ng-icon name="{{ item.icon }}" [class]="sidebarCollapsed() ? '' : 'mr-2'" />
+              @if (!sidebarCollapsed()) {
+                <span class="text-sm font-medium">{{ item.label }}</span>
+              }
+            </a>
           }
-        </a>
-        }
-        }
         }
       </z-sidebar-group>
 
       <div class="mt-auto">
-        <div z-menu [zMenuTriggerFor]="userMenu" zPlacement="rightBottom" [class]="
+        <div
+          z-menu
+          [zMenuTriggerFor]="userMenu"
+          zPlacement="rightBottom"
+          [class]="
             'hover:bg-accent flex cursor-pointer items-center justify-center gap-2 rounded-md ' +
             (sidebarCollapsed() ? 'm-2 p-0' : 'p-2')
-          ">
+          "
+        >
           <z-avatar [zFallback]="name().slice(0, 1)" [zSize]="32" />
 
           @if (!sidebarCollapsed()) {
-          <div>
-            <span class="font-medium">{{ name() }}</span>
-            <div class="text-xs">{{ email() }}</div>
-          </div>
+            <div>
+              <span class="font-medium">{{ name() }}</span>
+              <div class="text-xs">{{ email() }}</div>
+            </div>
 
-          <ng-icon name="lucideChevronsUpDown" class="ml-auto" />
+            <ng-icon name="lucideChevronsUpDown" class="ml-auto" />
           }
         </div>
 
@@ -60,9 +63,9 @@
           <div z-menu-content class="w-48">
             <button type="button" z-menu-item (click)="toggleTheme()">
               @if (themeMode() == 'dark') {
-              <ng-icon name="lucideSun" class="mr-2" />
+                <ng-icon name="lucideSun" class="mr-2" />
               } @else {
-              <ng-icon name="lucideMoon" class="mr-2" />
+                <ng-icon name="lucideMoon" class="mr-2" />
               }
               {{ themeMode() == 'dark' ? 'Light Mode' : 'Dark Mode' }}
             </button>
@@ -84,9 +87,12 @@
     <z-header>
       <div class="flex w-full items-center justify-between">
         <div class="flex items-center gap-3">
-          <button type="button"
+          <button
+            type="button"
             class="hover:bg-accent flex size-8 cursor-pointer items-center justify-center rounded-md"
-            aria-label="Toggle sidebar" (click)="toggleSidebar()">
+            aria-label="Toggle sidebar"
+            (click)="toggleSidebar()"
+          >
             <ng-icon name="lucidePanelLeft" />
           </button>
           <div class="bg-border h-4 w-px"></div>
@@ -98,15 +104,15 @@
         </div>
         <div class="flex items-center gap-4">
           @if (themeMode() == 'dark') {
-          <img src="Hanwha Systems_CMYK_43_EH_w.png" width="164" />
+            <img src="Hanwha Systems_CMYK_43_EH_w.png" width="164" />
           } @else {
-          <img src="Hanwha Systems_RGB_43_EH.png" width="164" />
+            <img src="Hanwha Systems_RGB_43_EH.png" width="164" />
           }
         </div>
       </div>
     </z-header>
 
-    <z-content class="min-h-50 flex-1 overflow-auto p-0">
+    <z-content class="min-h-50 flex-1 overflow-auto p-0 [&>main]:min-h-0 [&>main]:flex-1">
       <router-outlet />
       <z-toaster />
     </z-content>

@@ -1,0 +1,131 @@
+<div class="flex h-full min-h-0">
+  <aside
+    class="bg-background flex shrink-0 flex-col overflow-hidden border-r transition-[width] duration-150 ease-out"
+    [class]="panelCollapsed() ? 'w-14 items-center gap-2 pt-3' : 'w-[360px]'"
+  >
+    @if (panelCollapsed()) {
+      <button
+        type="button"
+        z-button
+        zType="ghost"
+        zSize="icon"
+        aria-label="Expand panel"
+        (click)="openPanel()"
+      >
+        <ng-icon name="lucidePanelLeftOpen" size="18" />
+      </button>
+      <button
+        type="button"
+        z-button
+        zType="ghost"
+        zSize="icon"
+        aria-label="Search criteria"
+        (click)="openPanel()"
+      >
+        <ng-icon name="lucideSearch" size="20" />
+      </button>
+    } @else {
+      <header class="flex shrink-0 items-center justify-between px-4 pt-4 pb-2">
+        <h1 class="text-lg font-semibold">Imagery Search</h1>
+        <button
+          type="button"
+          z-button
+          zType="ghost"
+          zSize="icon"
+          aria-label="Collapse panel"
+          (click)="panelCollapsed.set(true)"
+        >
+          <ng-icon name="lucidePanelLeftClose" size="18" />
+        </button>
+      </header>
+
+      <section class="flex shrink-0 flex-col">
+        <button
+          type="button"
+          class="bg-muted/60 hover:bg-muted flex shrink-0 items-center justify-between border-y px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-default disabled:hover:bg-muted/60"
+          [disabled]="!searched()"
+          (click)="toggleCriteria()"
+        >
+          Search criteria
+          @if (searched()) {
+            <ng-icon [name]="criteriaOpen() ? 'lucideChevronUp' : 'lucideChevronDown'" size="16" />
+          }
+        </button>
+
+        @if (criteriaOpen()) {
+          <div class="px-4 py-4">
+            <search-criteria
+              [(criteria)]="criteria"
+              [loading]="loading()"
+              [canSearch]="canSearch()"
+              (search)="search()"
+              (reset)="reset()"
+            />
+          </div>
+        } @else {
+          <div class="shrink-0 px-4 py-3">
+            <search-criteria
+              [(criteria)]="criteria"
+              [summary]="true"
+              [viewSearch]="viewSearch()"
+              (criteriaApplied)="search()"
+            />
+          </div>
+        }
+      </section>
+
+      @if (searched()) {
+        <section class="flex min-h-0 flex-col" [class.flex-1]="resultsOpen()">
+          <button
+            type="button"
+            class="bg-muted/60 hover:bg-muted flex shrink-0 items-center justify-between border-y px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-default disabled:hover:bg-muted/60"
+            (click)="toggleResults()"
+          >
+            Results ({{ total() }})
+            <ng-icon [name]="resultsOpen() ? 'lucideChevronUp' : 'lucideChevronDown'" size="16" />
+          </button>
+
+          @if (resultsOpen()) {
+            <result-list
+              [items]="items()"
+              [total]="total()"
+              [page]="page()"
+              [pageSize]="pageSize()"
+              [sort]="sort()"
+              [loading]="loading()"
+              [selectedId]="selectedId()"
+              [browseIds]="browseIds()"
+              [footprintIds]="footprintIds()"
+              [showFootprints]="showFootprints()"
+              (showFootprintsChange)="setAllFootprints($event)"
+              [showBrowse]="showBrowse()"
+              (showBrowseChange)="setAllBrowse($event)"
+              (pageChange)="changePage($event)"
+              (pageSizeChange)="changePageSize($event)"
+              (sortChange)="changeSort($event)"
+              (itemSelect)="selectItem($event)"
+              (itemDetail)="openDetail($event)"
+              (toggleFootprint)="toggleFootprint($event)"
+              (hover)="hoveredId.set($event)"
+              (toggleBrowse)="toggleBrowse($event)"
+              (addToCart)="addToCart($event)"
+            />
+          }
+        </section>
+      }
+    }
+  </aside>
+
+  <div class="min-w-0 flex-1">
+    <imagery-map
+      [items]="items()"
+      [selectedId]="selectedId()"
+      [hoveredId]="hoveredId()"
+      [footprintIds]="footprintIds()"
+      [browseIds]="browseIds()"
+      [aoi]="criteria().aoi"
+      (aoiChange)="setAoi($event)"
+      (itemClick)="selectItem($event)"
+    />
+  </div>
+</div>
