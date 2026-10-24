@@ -19,13 +19,8 @@
           <z-form-field>
             <z-form-label [zRequired]="true">Email</z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="email"
-                formControlName="email"
-                placeholder="gildong_hong@example.com"
-                class="w-full"
-              />
+              <input z-input type="email" formControlName="email" placeholder="gildong_hong@example.com"
+                class="w-full" />
             </z-form-control>
           </z-form-field>
 
@@ -35,16 +30,10 @@
               <!-- <a z-button zType="link" class="p-0">Forgot password?</a> -->
             </div>
             <z-form-control>
-              <input
-                z-input
-                type="password"
-                formControlName="password"
-                placeholder=""
-                class="w-full"
-              />
+              <input z-input type="password" formControlName="password" placeholder="" class="w-full" />
             </z-form-control>
             @if (errorMsg()) {
-              <p class="text-sm text-red-600">{{ errorMsg() }}</p>
+            <p class="text-sm text-red-600">{{ errorMsg() }}</p>
             }
           </z-form-field>
 
@@ -61,8 +50,9 @@
     </div>
   </div>
   <div class="hidden flex-1 items-center justify-center bg-black p-8 lg:flex">
-    <div class="flex justify-center items-center gap-10 flex-col">
+    <div class="flex justify-center items-center gap-6 flex-col">
       <img src="Hanwha Systems_CMYK_43_EH_w.png" width="376" />
+      <p class="text-lg text-white/70">Satellite imagery, on demand</p>
     </div>
   </div>
 </div>

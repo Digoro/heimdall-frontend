@@ -19,98 +19,64 @@
           <z-form-field>
             <z-form-label [zRequired]="true">Full Name </z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="text"
-                formControlName="name"
-                placeholder="Gildong Hong"
-                class="w-full"
-              />
+              <input z-input type="text" formControlName="name" placeholder="Gildong Hong" class="w-full" />
             </z-form-control>
             @if (userForm.controls.name.dirty && userForm.controls.name.hasError('maxlength')) {
-              <span class="text-sm text-red-600">Up to 50 characters.</span>
+            <span class="text-sm text-red-600">Up to 50 characters.</span>
             }
           </z-form-field>
 
           <z-form-field>
             <z-form-label [zRequired]="true">Email</z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="email"
-                formControlName="email"
-                placeholder="gildong_hong@example.com"
-                class="w-full"
-              />
+              <input z-input type="email" formControlName="email" placeholder="gildong_hong@example.com"
+                class="w-full" />
             </z-form-control>
             @if (userForm.controls.email.dirty && userForm.controls.email.hasError('email')) {
-              <span class="text-sm text-red-600">Must be in email format.</span>
+            <span class="text-sm text-red-600">Must be in email format.</span>
             }
             @if (userForm.controls.email.dirty && userForm.controls.email.hasError('maxlength')) {
-              <span class="text-sm text-red-600">Up to 255 characters.</span>
+            <span class="text-sm text-red-600">Up to 255 characters.</span>
             }
           </z-form-field>
 
           <z-form-field>
             <z-form-label [zRequired]="true">Department</z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="text"
-                formControlName="department"
-                placeholder="Organization / University / Individual"
-                class="w-full"
-              />
+              <input z-input type="text" formControlName="department"
+                placeholder="Organization / University / Individual" class="w-full" />
             </z-form-control>
             @if (
-              userForm.controls.department.dirty &&
-              userForm.controls.department.hasError('maxlength')
+            userForm.controls.department.dirty &&
+            userForm.controls.department.hasError('maxlength')
             ) {
-              <span class="text-sm text-red-600">Up to 100 characters.</span>
+            <span class="text-sm text-red-600">Up to 100 characters.</span>
             }
           </z-form-field>
 
           <z-form-field>
             <z-form-label [zRequired]="true">Password</z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="password"
-                formControlName="password"
-                placeholder=""
-                class="w-full"
-              />
+              <input z-input type="password" formControlName="password" placeholder="" class="w-full" />
             </z-form-control>
             @if (userForm.controls.password.hasError('pattern')) {
-              <p class="text-sm text-red-600">
-                Password must be at least 8 characters long, including English letters, numbers, and
-                special characters.
-              </p>
+            <p class="text-sm text-red-600">
+              Password must be at least 8 characters long, including English letters, numbers, and
+              special characters.
+            </p>
             }
           </z-form-field>
 
           <z-form-field>
             <z-form-label [zRequired]="true">Confirm Password</z-form-label>
             <z-form-control>
-              <input
-                z-input
-                type="password"
-                formControlName="confirmPassword"
-                placeholder=""
-                class="w-full"
-              />
+              <input z-input type="password" formControlName="confirmPassword" placeholder="" class="w-full" />
             </z-form-control>
             @if (userForm.controls.confirmPassword.hasError('mustMatch')) {
-              <p class="text-sm text-red-600">Password and Confirm Password must match.</p>
+            <p class="text-sm text-red-600">Password and Confirm Password must match.</p>
             }
           </z-form-field>
-          <button
-            type="submit"
-            z-button
-            zFull
-            [zLoading]="isLoading()"
-            [zDisabled]="isLoading() || userForm.invalid"
-          >
+          <button type="submit" z-button zFull [zLoading]="isLoading()" [zDisabled]="isLoading() || userForm.invalid">
             Create Account
           </button>
         </form>
@@ -123,8 +89,9 @@
     </div>
   </div>
   <div class="hidden flex-1 items-center justify-center bg-black p-8 lg:flex">
-    <div class="text-center">
+    <div class="flex justify-center items-center gap-6 flex-col">
       <img src="Hanwha Systems_CMYK_43_EH_w.png" width="376" />
+      <p class="text-lg text-white/70">Satellite imagery, on demand</p>
     </div>
   </div>
 </div>
