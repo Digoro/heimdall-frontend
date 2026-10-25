@@ -13,6 +13,7 @@ import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   effect,
   ElementRef,
@@ -27,6 +28,7 @@ import {
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideBookmark,
+  lucideCrosshair,
   lucideMinus,
   lucidePentagon,
   lucidePlus,
@@ -43,9 +45,14 @@ import { TerraDrawMapLibreGLAdapter } from 'terra-draw-maplibre-gl-adapter';
 
 const STYLE_LIGHT = 'https://tiles.openfreemap.org/styles/bright';
 const STYLE_DARK = 'https://tiles.openfreemap.org/styles/positron';
+/** 세계 밖(빈 영역)을 찍어도 검색 좌표는 유효 범위(경도 ±180, 위도 ±90)에 있도록 한다. */
+const clampToWorld = (ring: number[][]) =>
+  ring.map(([lng, lat]) => [Math.max(-180, Math.min(180, lng)), Math.max(-90, Math.min(90, lat))]);
+
 const styleFor = (mode: 'light' | 'dark') => (mode === 'dark' ? STYLE_DARK : STYLE_LIGHT);
 const SEOUL: [number, number] = [126.978, 37.5665];
 const AOI_COLOR = '#2563eb';
+const HIGHLIGHT_COLOR = '#f97316';
 
 const FOOTPRINT_SOURCE = 'footprints';
 const FOOTPRINT_FILL = 'footprint-fill';
@@ -53,6 +60,24 @@ const FOOTPRINT_LINE = 'footprint-line';
 const browseKey = (itemId: string) => `browse-${itemId}`;
 
 type DrawMode = 'rectangle' | 'polygon';
+type CoordinateFormat = 'DD' | 'DMS';
+
+/** 37.5665°N 126.9780°E 또는 37°33'59.4"N 126°58'40.8"E */
+function formatCoordinate(lng: number, lat: number, format: CoordinateFormat): string {
+  // 값이 바뀌어도 표시 폭이 변하지 않도록 자릿수를 0으로 채운다 (위도 도 2자리, 경도 도 3자리).
+  const part = (value: number, positive: string, negative: string, degDigits: number) => {
+    const hemi = value >= 0 ? positive : negative;
+    const abs = Math.abs(value);
+    if (format === 'DD') return `${abs.toFixed(4).padStart(degDigits + 5, '0')}°${hemi}`;
+    // 반올림으로 60초/60분이 되지 않도록 소수 첫째 자리 단위(1/10초)로 환산해 나눈다.
+    const tenths = Math.round(abs * 3600 * 10);
+    const deg = Math.floor(tenths / 36000);
+    const min = Math.floor((tenths % 36000) / 600);
+    const sec = ((tenths % 600) / 10).toFixed(1);
+    return `${String(deg).padStart(degDigits, '0')}°${String(min).padStart(2, '0')}'${sec.padStart(4, '0')}"${hemi}`;
+  };
+  return `${part(lat, 'N', 'S', 2)} ${part(lng, 'E', 'W', 3)}`;
+}
 
 @Component({
   selector: 'imagery-map',
@@ -63,6 +88,7 @@ type DrawMode = 'rectangle' | 'polygon';
       lucideSquare,
       lucidePentagon,
       lucideBookmark,
+      lucideCrosshair,
       lucidePlus,
       lucideMinus,
     }),
@@ -133,6 +159,38 @@ type DrawMode = 'rectangle' | 'polygon';
           <ng-icon name="lucideMinus" />
         </button>
       </div>
+
+      <div
+        class="bg-background absolute bottom-4 left-4 z-10 flex items-center gap-3 rounded-md border px-3 py-1.5 text-xs shadow-xs"
+      >
+        <span class="text-muted-foreground">
+          Zoom
+          <span class="text-foreground inline-block w-[4ch] text-right font-medium tabular-nums">
+            {{ zoomLevel().toFixed(1) }}
+          </span>
+        </span>
+        <span class="flex items-center gap-1.5 font-mono">
+          <ng-icon name="lucideCrosshair" size="14" class="text-muted-foreground" />
+          {{ coordinateText() }}
+        </span>
+        <span class="bg-muted flex rounded-md p-0.5" role="group" aria-label="Coordinate format">
+          @for (format of coordinateFormats; track format) {
+            <button
+              type="button"
+              class="rounded px-2 py-0.5 font-medium transition-colors"
+              [class]="
+                coordinateFormat() === format
+                  ? 'bg-background text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
+              "
+              [attr.aria-pressed]="coordinateFormat() === format"
+              (click)="coordinateFormat.set(format)"
+            >
+              {{ format }}
+            </button>
+          }
+        </span>
+      </div>
     </div>
   `,
   host: { class: 'block h-full w-full' },
@@ -153,6 +211,14 @@ export class ImageryMapComponent {
   readonly itemClick = output<string>();
 
   protected readonly drawMode = signal<DrawMode | null>(null);
+  protected readonly coordinateFormats: CoordinateFormat[] = ['DD', 'DMS'];
+  protected readonly coordinateFormat = signal<CoordinateFormat>('DD');
+  /** 마우스 커서가 가리키는 좌표 (처음에는 지도 중심) */
+  private readonly cursor = signal<[number, number] | null>(null);
+  protected readonly coordinateText = computed(() => {
+    const cursor = this.cursor();
+    return cursor ? formatCoordinate(cursor[0], cursor[1], this.coordinateFormat()) : '-';
+  });
   /** 현재 지도 줌 레벨 (AOI 없는 검색 가능 여부 판단용) */
   readonly zoomLevel = signal(0);
 
@@ -166,7 +232,6 @@ export class ImageryMapComponent {
   private draw?: TerraDraw;
   private readonly ready = signal(false);
   private fittedItems?: CatalogItem[];
-  private fittedSelected: string | null = null;
   private readonly browseLayers = new Set<string>();
   private appliedState = { selected: null as string | null, hovered: null as string | null };
 
@@ -207,19 +272,6 @@ export class ImageryMapComponent {
       untracked(() => this.applyFeatureState(selected, hovered));
     });
 
-    // 목록에서 선택한 항목의 footprint로 이동
-    effect(() => {
-      const selected = this.selectedId();
-      if (!selected) this.fittedSelected = null;
-      if (!this.ready() || !selected) return;
-      if (selected === this.fittedSelected) return;
-      this.fittedSelected = selected;
-      untracked(() => {
-        const item = this.items().find((i) => i.itemId === selected);
-        if (item) this.fitToItems([item]);
-      });
-    });
-
     effect(() => {
       const items = this.items();
       const ids = this.browseIds();
@@ -258,13 +310,13 @@ export class ImageryMapComponent {
     const bounds = this.map?.getBounds();
     if (!bounds) return null;
     const [w, s, e, n] = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
-    const ring = [
+    const ring = clampToWorld([
       [w, s],
       [e, s],
       [e, n],
       [w, n],
       [w, s],
-    ];
+    ]);
     return { shape: 'rectangle', geometry: { type: 'Polygon', coordinates: [ring] }, areaKm2: ringAreaKm2(ring) };
   }
 
@@ -290,6 +342,8 @@ export class ImageryMapComponent {
       style: this.currentStyle,
       center: SEOUL,
       zoom: 9,
+      // 세계가 좌우로 반복되면 AOI 경도가 ±180을 넘어 검색이 비게 되므로 한 장의 세계 안으로 제한한다.
+      renderWorldCopies: false,
       attributionControl: { compact: true },
     });
     this.map = map;
@@ -317,6 +371,9 @@ export class ImageryMapComponent {
 
       this.setupLayers(map);
       this.zoomLevel.set(map.getZoom());
+      const center = map.getCenter();
+      this.cursor.set([center.lng, center.lat]);
+      map.on('mousemove', (e) => this.cursor.set([e.lngLat.lng, e.lngLat.lat]));
       map.on('zoom', () => this.zoomLevel.set(map.getZoom()));
       this.ready.set(true);
     });
@@ -351,7 +408,15 @@ export class ImageryMapComponent {
       type: 'line',
       source: FOOTPRINT_SOURCE,
       paint: {
-        'line-color': '#2563eb',
+        // 선택/호버된 footprint는 주황으로 강조한다.
+        'line-color': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          HIGHLIGHT_COLOR,
+          ['boolean', ['feature-state', 'hovered'], false],
+          HIGHLIGHT_COLOR,
+          '#2563eb',
+        ],
         'line-width': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
@@ -429,7 +494,7 @@ export class ImageryMapComponent {
       if (stale.length) draw.removeFeatures(stale);
       draw.setMode('static');
 
-      const coordinates = feature.geometry.coordinates as number[][][];
+      const coordinates = [clampToWorld((feature.geometry.coordinates as number[][][])[0])];
       const aoi: Aoi = {
         shape: feature.properties['mode'] === 'rectangle' ? 'rectangle' : 'polygon',
         geometry: { type: 'Polygon', coordinates },

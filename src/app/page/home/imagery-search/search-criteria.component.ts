@@ -1,6 +1,5 @@
 import { ImagingMode } from '@/model/collection';
 import {
-  createDefaultCriteria,
   IMAGING_MODES,
   ImagerySearchCriteria,
   INCIDENCE_RANGE,
@@ -193,19 +192,10 @@ const md = (d: Date) => ymd(d).slice(5);
 
         <div class="grid grid-cols-2 gap-2">
           <button type="button" z-button zType="outline" (click)="reset.emit()">Reset</button>
-          <button
-            type="button"
-            z-button
-            [zLoading]="loading()"
-            [disabled]="!canSearch()"
-            (click)="search.emit()"
-          >
+          <button type="button" z-button [zLoading]="loading()" (click)="search.emit()">
             Search
           </button>
         </div>
-        @if (!canSearch()) {
-          <p class="text-muted-foreground -mt-3 text-xs">Zoom in or draw an AOI to search.</p>
-        }
       </div>
     }
   `,
@@ -217,8 +207,6 @@ export class SearchCriteriaComponent {
   readonly loading = input(false);
   /** 마지막 검색이 AOI 없이 지도 화면 영역으로 수행됐는지 */
   readonly viewSearch = input(false);
-  /** AOI가 없을 때 지도 줌이 충분한지 포함한 검색 가능 여부 */
-  readonly canSearch = input(true);
 
   readonly search = output<void>();
   readonly reset = output<void>();
@@ -296,10 +284,9 @@ export class SearchCriteriaComponent {
     this.criteria.update((c) => ({ ...c, ...patch }));
   }
 
+  /** 검색 전 처음 상태(조건, 결과, 지도 AOI 모두 초기화)로 되돌린다. */
   protected clearAll() {
-    // AOI는 지도에 그려진 값이라 함께 지운다.
-    this.criteria.set(createDefaultCriteria());
-    this.criteriaApplied.emit();
+    this.reset.emit();
   }
 
   protected setModes(value: string | string[]) {

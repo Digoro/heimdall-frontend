@@ -64,7 +64,5 @@ export interface ImagerySearchResult {
   total: number;
 }
 
-/** AOI 없이 지도 화면 영역으로 검색할 수 있는 최소 줌 레벨 */
-export const MIN_VIEW_SEARCH_ZOOM = 6;
 export const PAGE_SIZE = 10;
 export const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;

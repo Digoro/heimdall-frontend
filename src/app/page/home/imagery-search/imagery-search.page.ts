@@ -3,7 +3,6 @@ import {
   Aoi,
   createDefaultCriteria,
   ImagerySearchCriteria,
-  MIN_VIEW_SEARCH_ZOOM,
   PAGE_SIZE,
   SortOption,
 } from '@/model/imagery-search';
@@ -105,16 +104,12 @@ export class ImagerySearchPage {
     return this.showFootprints() ? ids : ids.filter((id) => this.footprintSet().has(id));
   });
 
-  protected readonly canSearch = computed(
-    () => !!this.criteria().aoi || this.map().zoomLevel() >= MIN_VIEW_SEARCH_ZOOM,
-  );
-
   protected search() {
     const criteria = this.criteria();
     let request = criteria;
     if (!criteria.aoi) {
       const view = this.map().viewportAoi();
-      if (!view || this.map().zoomLevel() < MIN_VIEW_SEARCH_ZOOM) return;
+      if (!view) return;
       request = { ...criteria, aoi: view };
     }
     this.appliedCriteria.set(criteria);
@@ -150,6 +145,8 @@ export class ImagerySearchPage {
     this.appliedCriteria.set(null);
     this.viewSearch.set(false);
     this.criteriaOpen.set(true);
+    this.resultsOpen.set(true);
+    this.page.set(1);
     this.selectedId.set(null);
     this.browseSet.set(new Set());
     this.footprintSet.set(new Set());
